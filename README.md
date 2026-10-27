@@ -5,6 +5,12 @@ Curso IF6000 Redes en los Negocios II – UCR, II Ciclo 2026. Entrega presencial
 
 Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes, VLANs, puertos, IPs) se registra aquí antes de configurarla en Packet Tracer.
 
+## Estado actual (26/10/2026)
+
+- ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes armada en `pkt/ClavitoVeloz.pkt` (respaldo en `pkt/versiones/fase0-topologia-fisica.pkt`), sin configuración.
+- ⏭️ **Próxima sesión:** Fase 1 – configuración de Grecia (VLANs, trunks, router-on-a-stick, DHCP, Gerencia estática, VLAN 900).
+- ❓ Pendiente de decidir: D5 enrutamiento (propuesta: EIGRP), versión de Packet Tracer del grupo.
+
 ---
 
 ## Contenido
@@ -17,8 +23,9 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 6. [D1 – Direccionamiento (VLSM)](#d1--direccionamiento-vlsm)
 7. [D2 – Equipos y VLANs](#d2--equipos-y-vlans)
 8. [D3 – Puertos, conexiones e IPs fijas](#d3--puertos-conexiones-e-ips-fijas)
-9. [Pendientes](#pendientes)
-10. [Comandos de referencia (vistos en clase)](#comandos-de-referencia-vistos-en-clase)
+9. [Topología física (Fase 0)](#topología-física-fase-0)
+10. [Pendientes](#pendientes)
+11. [Comandos de referencia (vistos en clase)](#comandos-de-referencia-vistos-en-clase)
 
 ---
 
@@ -92,8 +99,8 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 
 | Fase | Contenido | Estado |
 | --- | --- | --- |
-| 0 | Decisiones base: direccionamiento, equipos, VLANs, puertos, IPs, enrutamiento | ⏳ Falta D5 (enrutamiento) |
-| 1 | Grecia LAN: router + 3 switches + 1–2 PCs por VLAN; hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | Pendiente |
+| 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (D5 se decide antes de la Fase 2) |
+| 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ⏭️ Siguiente |
 | 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | Pendiente |
 | 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | Pendiente |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
@@ -307,10 +314,45 @@ Libres para crecer: .106 – .110.
 
 ---
 
+## Topología física (Fase 0)
+
+Armada en Packet Tracer el 26/10/2026 con 1 PC por departamento + 1 laptop admin por sede (los 182 PCs se agregan en la Fase 4). Troncales y WAN según [D3](#d3--puertos-conexiones-e-ips-fijas).
+
+### Equipos finales colocados
+
+| Sede | Equipo (Display Name) | Tipo | Switch | Puerto | VLAN |
+| --- | --- | --- | --- | --- | --- |
+| Grecia | GRE-VEN-PC01 | PC-PT | GRE-SW01 | Fa0/1 | 300 |
+| Grecia | GRE-ADM-LT01 | Laptop-PT | GRE-SW01 | Fa0/24 | 900 |
+| Grecia | GRE-PRO-PC01 | PC-PT | GRE-SW02 | Fa0/1 | 200 |
+| Grecia | GRE-DES-PC01 | PC-PT | GRE-SW03 | Fa0/1 | 400 |
+| Grecia | GRE-GER-PC01 | PC-PT | GRE-SW03 | Fa0/17 | 100 |
+| San Ramón | SR-BOD-PC01 | PC-PT | SR-SW01 | Fa0/1 | 500 |
+| San Ramón | SR-ADM-LT01 | Laptop-PT | SR-SW01 | Fa0/24 | 900 |
+| San Ramón | SR-VEN-PC01 | PC-PT | SR-SW02 | Fa0/1 | 300 |
+| San Ramón | SR-GER-PC01 | PC-PT | SR-SW03 | Fa0/1 | 100 |
+| San Ramón | SR-CON-PC01 | PC-PT | SR-SW03 | Fa0/13 | 600 |
+| Pérez Zeledón | PZ-BOD-PC01 | PC-PT | PZ-SW01 | Fa0/1 | 500 |
+| Pérez Zeledón | PZ-ADM-LT01 | Laptop-PT | PZ-SW01 | Fa0/24 | 900 |
+| Pérez Zeledón | PZ-VEN-PC01 | PC-PT | PZ-SW02 | Fa0/1 | 300 |
+| Pérez Zeledón | PZ-GER-PC01 | PC-PT | PZ-SW03 | Fa0/1 | 100 |
+| Pérez Zeledón | PZ-CON-PC01 | PC-PT | PZ-SW03 | Fa0/13 | 600 |
+
+Nomenclatura de equipos finales: `SEDE-DEPTO-PC##` (VEN, PRO, DES, GER, BOD, CON) y `SEDE-ADM-LT##` para la laptop admin.
+
+### Presentación del lienzo
+
+- Las 3 sedes en triángulo, cada una en un rectángulo de color con su título (`SEDE - GRECIA`, `SEDE - SAN RAMON`, `SEDE - PEREZ ZELEDON`).
+- Nota por sede con sus VLANs, subredes y gateways.
+- Esperado sin configuración: enlaces de los routers en rojo (interfaces apagadas); switches y PCs en verde.
+
+---
+
 ## Pendientes
 
 - [ ] **D4 – Seguridad** (se define antes de la Fase 5): 3 usuarios administradores, contraseñas (enable, consola), texto del banner.
-- [ ] **D5 – Enrutamiento entre sedes:** protocolo (estático / dinámico) y rutas de respaldo (opcional).
+- [ ] **D5 – Enrutamiento entre sedes** (antes de la Fase 2). Propuesta: **EIGRP AS 10** (visto en semanas 10–11; OSPF se ve en noviembre). Con la /23 basta `network 172.27.86.0 0.0.1.255` + `no auto-summary` en los 3 routers, y el triángulo da el respaldo automático del opcional.
+- [ ] **Versión de Packet Tracer** del grupo (todos la misma).
 - [ ] **D6 – Plan de pruebas de conectividad** (30 pts).
 - [ ] Nombres de los integrantes para el archivo final `NOMBRE-NOMBRE-NOMBRE.PKT`.
 
