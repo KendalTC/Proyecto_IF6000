@@ -92,13 +92,15 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 
 | Fase | Contenido | Estado |
 | --- | --- | --- |
-| 0 | Decisiones base: direccionamiento, equipos, VLANs, puertos, IPs | ✅ Listo (falta D4 seguridad) |
-| 1 | Grecia mínima: router + 3 switches + 1–2 PCs por VLAN; VLANs, trunks, subinterfaces, DHCP; pings | ⏳ Siguiente |
-| 2 | Seguridad Grecia: VLAN admin, SSH, 3 usuarios, banners, puertos sin uso | Pendiente |
-| 3 | San Ramón mínima + enlace WAN + enrutamiento | Pendiente |
-| 4 | Pérez Zeledón + triángulo + prueba de redundancia (opcional) | Pendiente |
-| 5 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
-| 6 | Batería final de pruebas + guía para la comprobación individual | Pendiente |
+| 0 | Decisiones base: direccionamiento, equipos, VLANs, puertos, IPs, enrutamiento | ⏳ Falta D5 (enrutamiento) |
+| 1 | Grecia LAN: router + 3 switches + 1–2 PCs por VLAN; hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | Pendiente |
+| 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | Pendiente |
+| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | Pendiente |
+| 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
+| 5 | **Seguridad** en los 12 equipos: enable/consola, 3 usuarios, SSH, banner, `shutdown` de puertos sin uso | Pendiente |
+| 6 | Batería final de pruebas (incluye SSH desde las laptops admin) + guía para la comprobación | Pendiente |
+
+> La seguridad va al final (D3.4) para construir sin contraseñas. La VLAN 900 y sus IPs sí se configuran desde la Fase 1 porque son parte de la estructura.
 
 ---
 
@@ -108,6 +110,7 @@ Ninguna red, máscara o IP se fija sin consultarla con el grupo. Más reciente p
 
 | # | Fecha | Decisión | Motivo |
 | --- | --- | --- | --- |
+| D3.4 | 2026-10-26 | Seguridad (contraseñas, usuarios, SSH, banner, `shutdown`) en la Fase 5, al final; VLAN 900 e IPs desde la Fase 1 | Construir y probar sin autenticarse en cada equipo |
 | D3.3 | 2026-10-26 | Fase 1 arranca con router + 3 switches cableados y solo 1–2 PCs por VLAN | Estructura definitiva desde el inicio; los PCs se agregan en Fase 5 |
 | D3.2 | 2026-10-26 | IPs fijas en VLAN admin (router, SW01–03, laptop); Gerencia Grecia .98–.105; DHCP excluye solo el gateway | Orden fijo y fácil de recordar |
 | D3.1 | 2026-10-26 | Switches en cadena (RT → SW01 → SW02 → SW03); un departamento principal por switch; triángulo WAN Gi0/1 → Gi0/2 | Igual al laboratorio de troncales; etiquetado limpio |
@@ -306,7 +309,7 @@ Libres para crecer: .106 – .110.
 
 ## Pendientes
 
-- [ ] **D4 – Seguridad:** 3 usuarios administradores, contraseñas (enable, consola), texto del banner.
+- [ ] **D4 – Seguridad** (se define antes de la Fase 5): 3 usuarios administradores, contraseñas (enable, consola), texto del banner.
 - [ ] **D5 – Enrutamiento entre sedes:** protocolo (estático / dinámico) y rutas de respaldo (opcional).
 - [ ] **D6 – Plan de pruebas de conectividad** (30 pts).
 - [ ] Nombres de los integrantes para el archivo final `NOMBRE-NOMBRE-NOMBRE.PKT`.
