@@ -1,0 +1,436 @@
+-----------------Enrutamiento vlan troncal---------
+
+sw 0 
+Switch(config)#inter
+Switch(config)#interface rang
+Switch(config)#interface range fa0/1-10
+Switch(config-if-range)#sw
+Switch(config-if-range)#switchport mode a
+Switch(config-if-range)#switchport mode access 
+Switch(config-if-range)#sw
+Switch(config-if-range)#switchport acc
+Switch(config-if-range)#switchport access vlan 300
+Switch(config-if-range)#exit
+Switch(config)#interface range fa0/11-20
+Switch(config-if-range)#switchport mode access 
+Switch(config-if-range)#switchport access vlan 400
+Switch(config-if-range)#exit
+Switch(config)#inter
+Switch(config)#interface gi0/2
+Switch(config-if)#sw
+Switch(config-if)#switchport mode trun
+Switch(config-if)#switchport mode trunk 
+
+Switch(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/2, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/2, changed state to up
+
+Switch(config-if)#sw
+Switch(config-if)#switchport tru
+Switch(config-if)#switchport trunk na
+Switch(config-if)#switchport trunk native vlan 300
+Switch(config-if)#%SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on GigabitEthernet0/2 VLAN300.
+
+%SPANTREE-2-BLOCK_PVID_LOCAL: Blocking GigabitEthernet0/2 on VLAN0300. Inconsistent local vlan.
+
+
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/2 (300), with Switch GigabitEthernet0/2 (1).
+
+Switch(config-if)#exit
+Switch(config)#interface gi0/1
+Switch(config-if)#switchport mode trunk 
+Switch(config-if)#switchport trunk native vlan 300
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/2 (300), with Switch GigabitEthernet0/2 (1).
+
+Switch(config-if)#switchport trunk native vlan 300
+Switch(config-if)#exit
+Switch(config)#
+Switch(config)#
+Switch(config)#do show run 
+Building configuration...
+
+Current configuration : 2234 bytes
+!
+version 12.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Switch
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/2
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/3
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/4
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/5
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/6
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/7
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/8
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/9
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/10
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/11
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/12
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/13
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/14
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/15
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/16
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/17
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/18
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/19
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/20
+ switchport access vlan 400
+ switchport mode access
+!
+interface FastEthernet0/21
+!
+interface FastEthernet0/22
+!
+interface FastEthernet0/23
+!
+interface FastEthernet0/24
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 300
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ switchport trunk native vlan 300
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+!
+!
+!
+line con 0
+!
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+!
+!
+ --More-- 
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/2 (300), with Switch GigabitEthernet0/2 (1).
+end
+
+
+Switch(config)# interface range fa0/21-24 
+Switch(config-if-range)#shut 
+
+%LINK-5-CHANGED: Interface FastEthernet0/21, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/22, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/23, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/24, changed state to administratively down
+Switch(config-if-range)#
+Switch(config-if-range)#exit
+Switch(config)#
+Switch(config)#do wr 
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/2 (300), with Switch GigabitEthernet0/2 (1).
+
+Building configuration...
+[OK]
+Switch(config)#
+
+
+
+-----------sw 1-------------
+Switch>enable 
+Switch#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#
+Switch(config)#vlan 100
+Switch(config-vlan)#vlan 200
+Switch(config-vlan)#vlan 300
+Switch(config-vlan)#vlan 400
+Switch(config-vlan)#exit
+Switch(config)#
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/2 (1), with Switch GigabitEthernet0/2 (300).
+
+Switch(config)#
+Switch(config)#interface gi0/2
+Switch(config-if)#sw
+Switch(config-if)#switchport mode tr
+Switch(config-if)#switchport mode trunk 
+Switch(config-if)#sw
+Switch(config-if)#switchport trunk nat
+Switch(config-if)#switchport trunk native vlan 300
+Switch(config-if)#%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking GigabitEthernet0/2 on VLAN0300. Port consistency restored.
+
+%SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking GigabitEthernet0/2 on VLAN0001. Port consistency restored.
+
+
+Switch(config-if)#exit
+Switch(config)#inter
+Switch(config)#interface ran
+Switch(config)#interface range fa0/1-10
+Switch(config-if-range)#sw
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#sw 
+Switch(config-if-range)#sw
+Switch(config-if-range)#switchport ac
+Switch(config-if-range)#switchport access vlan 100
+Switch(config-if-range)#
+Switch(config-if-range)#interface range fa0/11-20
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 200
+Switch(config-if-range)#
+Switch(config-if-range)#exit
+Switch(config)#do show run
+Building configuration...
+
+Current configuration : 2177 bytes
+!
+version 12.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Switch
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/2
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/3
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/4
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/5
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/6
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/7
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/8
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/9
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/10
+ switchport access vlan 100
+ switchport mode access
+!
+interface FastEthernet0/11
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/12
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/13
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/14
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/15
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/16
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/17
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/18
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/19
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/20
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/21
+!
+interface FastEthernet0/22
+!
+interface FastEthernet0/23
+!
+interface FastEthernet0/24
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+ switchport trunk native vlan 300
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+!
+!
+!
+line con 0
+!
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+!
+!
+end
+
+
+Switch(config)#interface range fa0/21-24
+Switch(config-if-range)#shut
+Switch(config-if-range)#shutdown 
+
+%LINK-5-CHANGED: Interface FastEthernet0/21, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/22, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/23, changed state to administratively down
+
+%LINK-5-CHANGED: Interface FastEthernet0/24, changed state to administratively down
+Switch(config-if-range)#
+Switch(config-if-range)#exit
+Switch(config)#
+Switch#
+%SYS-5-CONFIG_I: Configured from console by console
+
+
+
+---------------------router---------
+------------------ROUTER
+Router(config)# interface gi0/1
+Router(config-if)#shut
+Router(config-if)#shutdown 
+
+Router(config-if)#
+%LINK-5-CHANGED: Interface GigabitEthernet0/1, changed state to administratively down
+
+Router(config-if)#inter
+Router(config-if)#inter
+Router(config-if)#exit
+Router(config)#interf
+Router(config)#interface gi0/0.300
+Router(config-subif)#enc
+Router(config-subif)#encapsulation dot
+Router(config-subif)#encapsulation dot1Q 300 native
+Router(config-subif)#ip add
+Router(config-subif)#ip address 12.10.10.1 255.255.255.0
+Router(config-subif)#exit
+Router(config)#interface gi0/0.100
+Router(config-subif)#encapsulation dot1Q 100
+Router(config-subif)#ip address 192.168.56.1 255.255.255.0
+Router(config-subif)#exit
+Router(config)#inter
+Router(config)#interface gi0/0.200
+Router(config-subif)#enc
+Router(config-subif)#encapsulation dot
+Router(config-subif)#encapsulation dot1Q 200
+Router(config-subif)#ip address 10.10.0.1 255.255.240.0
+Router(config-subif)#exit
+

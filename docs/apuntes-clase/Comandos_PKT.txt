@@ -1,0 +1,8 @@
+hostname KENDAL
+configure terminal
+enable password cisco
+service password-encryption
+copy running-config startup-config     /wr 
+
+banner motd
+

@@ -1,0 +1,204 @@
+-------------------troncales
+----------switch 
+Switch>enable 
+Switch#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#vlan 200
+Switch(config-vlan)#vlan 300
+Switch(config-vlan)#
+Switch(config-vlan)#
+Switch(config-vlan)#
+Switch(config-vlan)#
+Switch(config-vlan)#exit 
+Switch(config)#interface rang
+Switch(config)#interface range fa0/1-10
+Switch(config-if-range)#swit
+Switch(config-if-range)#switchport mo
+Switch(config-if-range)#switchport mode acce
+Switch(config-if-range)#switchport mode access 
+Switch(config-if-range)#sw
+Switch(config-if-range)#switchport acce
+Switch(config-if-range)#switchport access vlan 200
+Switch(config-if-range)#
+Switch(config-if-range)#interface range fa0/11-20
+Switch(config-if-range)#switchport mode access 
+Switch(config-if-range)#switchport access vlan 300
+Switch(config-if-range)#
+Switch(config-if-range)#interfa
+Switch(config-if-range)#exit
+Switch(config)#inter
+Switch(config)#interface gi0/1
+Switch(config-if)#sw
+Switch(config-if)#switchport mode tru
+Switch(config-if)#switchport mode trunk 
+Switch(config-if)#sw
+Switch(config-if)#switchport trun
+Switch(config-if)#switchport trunk native vlan 200
+Switch(config-if)#
+Switch(config-if)#
+Switch(config-if)#do wr
+Building configuration...
+[OK]
+Switch(config-if)#
+Switch(config-if)#do sh r
+Building configuration...
+
+Current configuration : 2177 bytes
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Switch
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/2
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/3
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/4
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/5
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/6
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/7
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/8
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/9
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/10
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/11
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/12
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/13
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/14
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/15
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/16
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/17
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/18
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/19
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/20
+ switchport access vlan 300
+ switchport mode access
+!
+interface FastEthernet0/21
+!
+interface FastEthernet0/22
+!
+interface FastEthernet0/23
+!
+interface FastEthernet0/24
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 200
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+!
+!
+!
+line con 0
+!
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+!
+!
+end
+
+
+Switch(config-if)#
+Switch(config-if)#
+Switch(config-if)#exit
+Switch(config)#interface vlan 200
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan200, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan200, changed state to up
+
+Switch(config-if)#interface vlan 300
+Switch(config-if)#
+%LINK-5-CHANGED: Interface Vlan300, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan300, changed state to up
+
+Switch(config-if)#
+Switch(config-if)#exit
+Switch(config)#interface range fa0/1-10
+Switch(config-if-range)#no shut
+Switch(config-if-range)#no shut
+Switch(config-if-range)#no shutdown 
+Switch(config-if-range)#interface range fa0/11-20
+Switch(config-if-range)#no shutdown 
+Switch(config-if-range)#interface range gi0/1
+Switch(config-if-range)#no shut
+Switch(config-if-range)#exit
+
+

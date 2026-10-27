@@ -1,0 +1,86 @@
+-----------CONFIGURACION CONEXION SSH ----------
+
+Switch>
+Switch>enable
+Switch#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname Kendal-SW1
+Kendal-SW1(config)#ip doma
+Kendal-SW1(config)#ip domain-na
+Kendal-SW1(config)#ip domain-name kendal-redes.com
+Kendal-SW1(config)#crypto ket gener
+Kendal-SW1(config)#crypto key gener
+Kendal-SW1(config)#crypto key generate rsa 
+The name for the keys will be: Kendal-SW1.kendal-redes.com
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 2048
+% Generating 2048 bit RSA keys, keys will be non-exportable...[OK]
+
+Kendal-SW1(config)#
+*Mar 1 0:2:59.848: %SSH-5-ENABLED: SSH 1.99 has been enabled
+Kendal-SW1(config)#line vty 0 15 
+Kendal-SW1(config-line)#transport input ssh 
+Kendal-SW1(config-line)#exit
+Kendal-SW1(config)#vlan 10 
+Kendal-SW1(config-vlan)#name Admin-ssh
+Kendal-SW1(config-vlan)#no vlan 10 
+Kendal-SW1(config)#no vlan 10 
+Kendal-SW1(config)#vlan 20 
+Kendal-SW1(config-vlan)#name Admin-ssh
+Kendal-SW1(config-vlan)#exit
+Kendal-SW1(config)#inter
+Kendal-SW1(config)#interface vlan 20 
+Kendal-SW1(config-if)#
+%LINK-5-CHANGED: Interface Vlan20, changed state to up
+
+Kendal-SW1(config-if)#ip address 192.168.1.2 255.255.255.0
+Kendal-SW1(config-if)#no shut 
+Kendal-SW1(config-if)#exit
+Kendal-SW1(config)#interface giga
+Kendal-SW1(config)#interface gigabitEthernet 0/1 
+Kendal-SW1(config-if)#switc
+Kendal-SW1(config-if)#switchport mode access 
+Kendal-SW1(config-if)#switch
+Kendal-SW1(config-if)#switchport access vlan 20 
+Kendal-SW1(config-if)#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan20, changed state to up
+
+Kendal-SW1(config-if)#exit 
+Kendal-SW1(config)#do sw 
+Translating "sw"...domain server (255.255.255.255)
+% Unknown command or computer name, or unable to find computer address
+
+Kendal-SW1(config)#.
+                   ^
+% Invalid input detected at '^' marker.
+	
+Kendal-SW1(config)#
+Kendal-SW1(config)#line vty 0 15 
+Kendal-SW1(config-line)#passw
+Kendal-SW1(config-line)#password cisco
+Kendal-SW1(config-line)#login
+Kendal-SW1(config-line)#exit
+Kendal-SW1(config)#
+Kendal-SW1(config)#
+Kendal-SW1(config)#enable secret cisco1
+Kendal-SW1(config)#end
+Kendal-SW1#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Kendal-SW1#
+Kendal-SW1#conf ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+Kendal-SW1(config)#
+Kendal-SW1(config)#username admin-redes privilege 15 passwords redes
+                                                             ^
+% Invalid input detected at '^' marker.
+	
+Kendal-SW1(config)#username admin-redes privilege 15 password redes
+Kendal-SW1(config)#line vty 0 15 
+Kendal-SW1(config-line)#login local 
+Kendal-SW1(config-line)#
+Kendal-SW1(config-line)#
+Kendal-SW1#

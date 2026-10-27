@@ -1,0 +1,9 @@
+# Windows / OneDrive
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+
+# Respaldos automáticos de Packet Tracer
+*.pkt.bak
+*.bak

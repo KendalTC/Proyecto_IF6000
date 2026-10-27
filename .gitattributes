@@ -1,0 +1,10 @@
+# Packet Tracer guarda en binario: Git no debe intentar mezclarlos
+*.pkt binary
+*.pka binary
+*.pdf binary
+*.png binary
+*.jpg binary
+
+# Texto con fin de línea normalizado
+*.md text eol=lf
+*.txt text
