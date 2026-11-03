@@ -1,0 +1,47 @@
+enable
+configure terminal
+hostname GRE-SW02
+
+vlan 100
+ name GERENCIA
+exit
+vlan 200
+ name PRODUCCION
+exit
+vlan 300
+ name VENTAS
+exit
+vlan 400
+ name DESARROLLO
+exit
+vlan 900
+ name ADMIN-SSH
+exit
+
+interface range FastEthernet0/1-20
+ description ACCESO-PRODUCCION
+ switchport mode access
+ switchport access vlan 200
+!
+interface range FastEthernet0/21-24
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+!
+interface GigabitEthernet0/1
+ description TRUNK-A-GRE-SW01
+ switchport mode trunk
+ switchport trunk native vlan 100
+!
+interface GigabitEthernet0/2
+ description TRUNK-A-GRE-SW03
+ switchport mode trunk
+ switchport trunk native vlan 100
+!
+interface Vlan900
+ description MGMT-VLAN900
+ ip address 172.27.86.115 255.255.255.248
+ no shutdown
+!
+ip default-gateway 172.27.86.113
+
+end
+write memory
