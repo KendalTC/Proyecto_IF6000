@@ -1,0 +1,35 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Grecia (Zona Franca)
+! Equipo ....: GRE-RT01  (Cisco 2911)
+! Bloque ....: Configuracion Fase 2 (sin seguridad)
+! Fase ......: 2
+! Que hace ..: Levanta el enlace WAN hacia San Ramon (Gi0/1) y activa EIGRP 10. Se aplica ENCIMA de GRE-RT01-fase1.
+! Requiere ..: GRE-RT01-fase1 aplicado
+! Decisiones : D1.4, D3.1, D5 (EIGRP propuesto)
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/1 up/up con 172.27.87.129
+!   show ip eigrp neighbors -> vecino 172.27.87.130 (SR-RT01)
+!   show ip route -> rutas "D" hacia 172.27.86.128-.255 (San Ramon)
+! SI FALLA:
+!   Gi0/1 down -> revisar cable cruzado y no shutdown en SR-RT01 Gi0/2
+!============================================================
+enable
+configure terminal
+!
+! --- Enlace WAN hacia San Ramon (172.27.87.128/30, GRE = .129) ---
+interface GigabitEthernet0/1
+ description WAN-A-SR-RT01-Gi0/2
+ ip address 172.27.87.129 255.255.255.252
+ no shutdown
+!
+! --- Enrutamiento EIGRP: la /23 completa en una sola linea (D5) ---
+router eigrp 10
+ network 172.27.86.0 0.0.1.255
+ no auto-summary
+!
+end
+write memory

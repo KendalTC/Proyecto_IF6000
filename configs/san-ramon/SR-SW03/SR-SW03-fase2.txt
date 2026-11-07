@@ -1,0 +1,75 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: San Ramon
+! Equipo ....: SR-SW03  (Cisco 2960-24TT)
+! Bloque ....: Configuracion Fase 2 (sin seguridad)
+! Fase ......: 2
+! Que hace ..: Hostname, VLANs, acceso Gerencia (Fa0/1-12) y Contabilidad (Fa0/13-22), trunk hacia SR-SW02, IP de gestion VLAN 900.
+! Requiere ..: Topologia fisica Fase 0
+! Decisiones : D2.3, D3.1, D3.2
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show vlan brief -> Fa0/1-12 en VLAN 100, Fa0/13-22 en VLAN 600
+!   show interfaces trunk -> trunks con native 100
+!   ping 172.27.86.241 -> exito (gateway VLAN 900)
+! SI FALLA:
+!   NATIVE_VLAN_MISMATCH -> la nativa no es 100 en el otro extremo
+!   PC con IP 169.254.x.x -> DHCP no llega: revisar trunks y subinterfaz del router
+!============================================================
+enable
+configure terminal
+hostname SR-SW03
+no ip domain-lookup
+!
+! --- VLANs de la sede (mismos IDs en todas las sedes, D2.3) ---
+vlan 100
+ name GERENCIA
+exit
+vlan 300
+ name VENTAS
+exit
+vlan 500
+ name BODEGA
+exit
+vlan 600
+ name CONTABILIDAD
+exit
+vlan 900
+ name ADMIN-SSH
+exit
+!
+! --- Puertos de acceso ---
+interface range FastEthernet0/1-12
+ description ACCESO-GERENCIA
+ switchport mode access
+ switchport access vlan 100
+!
+interface range FastEthernet0/13-22
+ description ACCESO-CONTABILIDAD
+ switchport mode access
+ switchport access vlan 600
+!
+interface range FastEthernet0/23-24
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+!
+! --- Troncal hacia SR-SW02 (nativa 100) ---
+interface GigabitEthernet0/1
+ description TRUNK-A-SR-SW02
+ switchport mode trunk
+ switchport trunk native vlan 100
+!
+interface GigabitEthernet0/2
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+!
+! --- Gestion del switch en VLAN 900 (D3.2) ---
+interface Vlan900
+ description MGMT-VLAN900
+ ip address 172.27.86.244 255.255.255.248
+ no shutdown
+!
+ip default-gateway 172.27.86.241
+!
+end
+write memory

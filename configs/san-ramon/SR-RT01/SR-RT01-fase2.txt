@@ -1,0 +1,95 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: San Ramon
+! Equipo ....: SR-RT01  (Cisco 2911)
+! Bloque ....: Configuracion Fase 2 (sin seguridad)
+! Fase ......: 2
+! Que hace ..: Hostname, router-on-a-stick (VLAN 100/300/500/600/900), DHCP de los 4 departamentos, enlace WAN hacia Grecia (Gi0/2) y EIGRP 10.
+! Requiere ..: Topologia fisica Fase 0; GRE-RT01-fase2 para que el enlace WAN levante
+! Decisiones : D1.4-D1.6, D2.1, D2.3, D3.1, D3.2, D5 (EIGRP propuesto)
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/0, sus 5 subinterfaces y Gi0/2 up/up
+!   show ip dhcp pool -> 4 pools SR-*
+!   show ip eigrp neighbors -> vecino 172.27.87.129 (GRE-RT01) por Gi0/2
+!   show ip route -> rutas "D" hacia las redes 172.27.86.0-.127 de Grecia
+! SI FALLA:
+!   Gi0/2 down -> revisar cable cruzado y que GRE-RT01 Gi0/1 tenga no shutdown
+!   Sin vecino EIGRP -> mismo AS (10) en ambos routers y network 172.27.86.0 0.0.1.255
+!============================================================
+enable
+configure terminal
+hostname SR-RT01
+no ip domain-lookup
+!
+! --- Interfaz fisica hacia la LAN: solo se enciende, las IPs van en subinterfaces ---
+interface GigabitEthernet0/0
+ description TRUNK-A-SR-SW01
+ no shutdown
+!
+! --- Router-on-a-stick: un gateway por VLAN (primera IP usable, D1.6) ---
+interface GigabitEthernet0/0.100
+ description VLAN100-GERENCIA-NATIVA
+ encapsulation dot1Q 100 native
+ ip address 172.27.86.193 255.255.255.224
+!
+interface GigabitEthernet0/0.300
+ description VLAN300-VENTAS
+ encapsulation dot1Q 300
+ ip address 172.27.86.161 255.255.255.224
+!
+interface GigabitEthernet0/0.500
+ description VLAN500-BODEGA
+ encapsulation dot1Q 500
+ ip address 172.27.86.129 255.255.255.224
+!
+interface GigabitEthernet0/0.600
+ description VLAN600-CONTABILIDAD
+ encapsulation dot1Q 600
+ ip address 172.27.86.225 255.255.255.240
+!
+interface GigabitEthernet0/0.900
+ description VLAN900-ADMIN-SSH
+ encapsulation dot1Q 900
+ ip address 172.27.86.241 255.255.255.248
+!
+! --- Enlaces WAN (triangulo: Gi0/1 sale a la siguiente sede, Gi0/2 recibe a la anterior) ---
+interface GigabitEthernet0/2
+ description WAN-A-GRE-RT01-Gi0/1
+ ip address 172.27.87.130 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ description WAN-A-PZ-RT01-RESERVADO-FASE3
+!
+! --- DHCP: se excluye el gateway de cada pool (D3.2) ---
+ip dhcp excluded-address 172.27.86.129
+ip dhcp excluded-address 172.27.86.161
+ip dhcp excluded-address 172.27.86.193
+ip dhcp excluded-address 172.27.86.225
+!
+ip dhcp pool SR-BODEGA
+ network 172.27.86.128 255.255.255.224
+ default-router 172.27.86.129
+!
+ip dhcp pool SR-VENTAS
+ network 172.27.86.160 255.255.255.224
+ default-router 172.27.86.161
+!
+ip dhcp pool SR-GERENCIA
+ network 172.27.86.192 255.255.255.224
+ default-router 172.27.86.193
+!
+ip dhcp pool SR-CONTABILIDAD
+ network 172.27.86.224 255.255.255.240
+ default-router 172.27.86.225
+!
+! --- Enrutamiento EIGRP: la /23 completa en una sola linea (D5) ---
+router eigrp 10
+ network 172.27.86.0 0.0.1.255
+ no auto-summary
+!
+end
+write memory

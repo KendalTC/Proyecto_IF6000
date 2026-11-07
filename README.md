@@ -8,8 +8,9 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 ## Estado actual (07/11/2026)
 
 - ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes.
-- 🟨 **Fase 1 – Grecia:** configuración aplicada por Sebastián (03/11) → scripts en `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt`, .pkt en `pkt/versiones/fase1-grecia-lan.pkt`. **Falta:** pruebas de conectividad con capturas en `pruebas/grecia/` y actualizar `pkt/ClavitoVeloz.pkt`.
-- ❓ Pendiente de decidir: D5 enrutamiento (propuesta: EIGRP), versión de Packet Tracer del grupo.
+- ✅ **Fase 1 – Grecia:** configurada (Sebastián, 03/11) y probada (07/11). Scripts en `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt`.
+- 🟨 **Fase 2 – San Ramón + WAN GRE–SR:** scripts listos en `configs/san-ramon/` y `configs/grecia/GRE-RT01/GRE-RT01-fase2.txt`, pendientes de aplicar.
+- ❓ Pendiente de confirmar: EIGRP como protocolo definitivo (D5.1), versión de Packet Tracer del grupo.
 
 ---
 
@@ -100,8 +101,8 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 | Fase | Contenido | Estado |
 | --- | --- | --- |
 | 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (D5 se decide antes de la Fase 2) |
-| 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | 🟨 Aplicada, falta probar |
-| 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | Pendiente |
+| 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ✅ Listo (07/11) |
+| 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | 🟨 En curso (scripts listos) |
 | 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | Pendiente |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
 | 5 | **Seguridad** en los 12 equipos: enable/consola, 3 usuarios, SSH, banner, `shutdown` de puertos sin uso | Pendiente |
@@ -117,6 +118,7 @@ Ninguna red, máscara o IP se fija sin consultarla con el grupo. Más reciente p
 
 | # | Fecha | Decisión | Motivo |
 | --- | --- | --- | --- |
+| D5.1 | 2026-11-07 | Enrutamiento entre sedes: **EIGRP AS 10**, `network 172.27.86.0 0.0.1.255` + `no auto-summary` en los 3 routers (propuesta en uso, falta confirmación del grupo) | Visto en clase (semanas 10–11); una sola línea cubre la /23; el triángulo da el respaldo automático |
 | D3.4 | 2026-10-26 | Seguridad (contraseñas, usuarios, SSH, banner, `shutdown`) en la Fase 5, al final; VLAN 900 e IPs desde la Fase 1 | Construir y probar sin autenticarse en cada equipo |
 | D3.3 | 2026-10-26 | Fase 1 arranca con router + 3 switches cableados y solo 1–2 PCs por VLAN | Estructura definitiva desde el inicio; los PCs se agregan en Fase 5 |
 | D3.2 | 2026-10-26 | IPs fijas en VLAN admin (router, SW01–03, laptop); Gerencia Grecia .98–.105; DHCP excluye solo el gateway | Orden fijo y fácil de recordar |
