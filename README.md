@@ -7,13 +7,19 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 
 ## Estado actual (07/11/2026)
 
-- ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes.
-- ✅ **Fase 1 – Grecia:** configurada (Sebastián, 03/11) y probada (07/11).
-- ✅ **Fase 2 – San Ramón + WAN GRE–SR + EIGRP:** configurada y probada (07/11). Ping entre sedes OK.
-- 🟨 **Fase 3 – Pérez Zeledón + cierre del triángulo:** scripts listos (`configs/perez-zeledon/`, `SR-RT01-fase3.txt`, `GRE-RT01-fase3.txt`), pendientes de aplicar.
-- 📌 **Faltantes de fases cerradas:** respaldo `pkt/versiones/fase2-san-ramon-wan.pkt`.
-- 📸 **Capturas de pruebas:** asignadas a **Mariangel**, se harán cuando haya más configuración (ver Pendientes).
-- ❓ Pendiente de confirmar con el grupo: EIGRP como protocolo definitivo (D5.1), versión de Packet Tracer.
+La red funciona completa: 3 sedes, 15 VLANs, DHCP, triángulo WAN y EIGRP AS 10. Faltan los PCs, la seguridad y las evidencias. **Entrega: jueves 26/11/2026.**
+
+| Fase | Estado |
+| --- | --- |
+| 0 – Decisiones + topología física | ✅ 26/10 |
+| 1 – Grecia LAN | ✅ 07/11 (configuró Sebastián el 03/11) |
+| 2 – San Ramón + WAN GRE–SR + EIGRP | ✅ 07/11 |
+| 3 – Pérez Zeledón + triángulo WAN | ✅ 07/11 (falta confirmar la prueba de respaldo) |
+| 4 – Poblar los 182 PCs | ⬜ |
+| 5 – Seguridad (SSH, usuarios, banner, puertos) | ⬜ — recomendado hacerla antes que la Fase 4 |
+| 6 – Pruebas finales + archivo de entrega + guía de estudio | ⬜ |
+
+**Próxima sesión:** ver la lista de [Pendientes](#pendientes), sección "Para la próxima sesión".
 
 ---
 
@@ -107,7 +113,7 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 | 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (26/10) |
 | 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ✅ Listo (07/11) |
 | 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | ✅ Listo (07/11) |
-| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | 🟨 En curso (scripts listos) |
+| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | ✅ Listo (07/11) |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
 | 5 | **Seguridad** en los 12 equipos: enable/consola, 3 usuarios, SSH, banner, `shutdown` de puertos sin uso | Pendiente |
 | 6 | Batería final de pruebas (incluye SSH desde las laptops admin) + guía para la comprobación | Pendiente |
@@ -369,17 +375,30 @@ Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/p
 
 ## Pendientes
 
-- [ ] **D4 – Seguridad** (se define antes de la Fase 5): 3 usuarios administradores, contraseñas (enable, consola), texto del banner.
-- [x] **D5 – Enrutamiento entre sedes:** EIGRP AS 10 en uso desde la Fase 2 (D5.1), falta confirmación del grupo.
-- [ ] **Versión de Packet Tracer** del grupo (todos la misma).
-- [ ] **D6 – Plan de pruebas de conectividad** (30 pts).
-- [ ] **Capturas de pruebas — Mariangel** (cuando haya más configuración). Guardar `.png` en `pruebas/<sede>/` según `pruebas/README.md`. Mínimo por fase cerrada:
+### Para la próxima sesión (decisiones que bloquean)
+
+- [ ] **D4 – Seguridad** (bloquea la Fase 5): 3 usuarios administradores (propuesta: uno por integrante, `privilege 15 secret`), contraseña de enable y de consola, texto del banner.
+- [ ] **Nombres completos de los integrantes** → nombre del archivo final `NOMBRE-NOMBRE-NOMBRE.PKT` y usuarios SSH.
+- [ ] **Orden de trabajo:** Fase 5 (seguridad) antes de la Fase 4 (PCs) — recomendado, por ser 12 equipos con scripts y más fácil de probar con pocos PCs.
+- [ ] **Confirmar la prueba de respaldo** (opcional +10): `tracert 172.27.86.2` desde PZ-BOD-PC01, apagar GRE-RT01 Gi0/2, repetir el `tracert` y ver que pasa por 172.27.87.133 (SR). Volver a encender con `no shutdown`.
+
+### Confirmaciones del grupo
+
+- [ ] **EIGRP AS 10** como protocolo definitivo (D5.1, ya en uso y funcionando).
+- [ ] **Versión de Packet Tracer** de los tres (todos la misma).
+
+### Trabajo por hacer
+
+- [ ] **Fase 4 – Poblar PCs:** faltan ~170 (Grecia 62, cada sucursal 54). Puertos según [D3](#d3--puertos-conexiones-e-ips-fijas); DHCP en todos excepto Gerencia Grecia (estática .98–.105, máscara /28, GW .97). Nombres `SEDE-DEPTO-PC##`.
+- [ ] **Fase 5 – Seguridad** en los 12 equipos: `enable secret`, consola, `service password-encryption`, 3 usuarios, SSH (`ip domain-name clavitoveloz.com`, RSA 2048, `ip ssh version 2`, `transport input ssh`, `login local`), banner, `shutdown` de puertos sin uso (descripción `SIN-USO-PENDIENTE-SHUTDOWN-FASE5`).
+- [ ] **Fase 6 – Cierre:** batería final de pruebas (incluye SSH desde las 3 laptops admin a sus 4 equipos), archivo `NOMBRE-NOMBRE-NOMBRE.PKT`, guía de estudio para la comprobación individual.
+- [ ] **Respaldos de configuración real:** guardar el `show running-config` de cada equipo en su carpeta de `configs/` al cerrar la Fase 5.
+- [ ] **Capturas de pruebas — Mariangel** (cuando haya más configuración). Guardar `.png` en `pruebas/<sede>/` según `pruebas/README.md`. Mínimo:
     - Grecia: ping de GRE-VEN-PC01 a Producción (.34), Desarrollo (.66), Gerencia (.98) y laptop (.117); `ipconfig` de un PC con DHCP; `show vlan brief` y `show interfaces trunk` de un switch.
     - San Ramón: lo mismo con SR-BOD-PC01 (.162, .194, .226, .245).
-    - WAN: ping de SR-BOD-PC01 a GRE-VEN-PC01 (172.27.86.2); `show ip eigrp neighbors` y `show ip route` en los 3 routers.
-    - Pérez Zeledón: ping de PZ-BOD-PC01 a .87.34, .87.66, .87.98 y .87.117; ping a Grecia (172.27.86.2) y a San Ramón (172.27.86.130).
-    - **Respaldo (opcional +10):** `tracert 172.27.86.2` desde PZ-BOD-PC01 antes y después de apagar el enlace PZ–GRE (GRE-RT01 `interface gi0/2` → `shutdown`), mostrando que la ruta cambia por San Ramón.
-- [ ] Nombres de los integrantes para el archivo final `NOMBRE-NOMBRE-NOMBRE.PKT`.
+    - Pérez Zeledón: ping de PZ-BOD-PC01 a .87.34, .87.66, .87.98 y .87.117.
+    - WAN: ping entre sedes (SR→172.27.86.2, PZ→172.27.86.2 y 172.27.86.130); `show ip eigrp neighbors` y `show ip route` en los 3 routers.
+    - **Respaldo (opcional +10):** `tracert 172.27.86.2` desde PZ-BOD-PC01 antes y después de apagar el enlace PZ–GRE.
 
 ---
 
