@@ -8,7 +8,7 @@
 ! Requiere ..: Topologia fisica Fase 0; GRE-RT01-fase2 para que el enlace WAN levante
 ! Decisiones : D1.4-D1.6, D2.1, D2.3, D3.1, D3.2, D5 (EIGRP propuesto)
 ! Autor .....: Claude / KendalTC (07/11/2026)
-! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+! Estado ....: [ ] Pendiente  [x] Aplicado  [x] Probado (07/11/2026)
 !------------------------------------------------------------
 ! VERIFICAR:
 !   show ip interface brief -> Gi0/0, sus 5 subinterfaces y Gi0/2 up/up

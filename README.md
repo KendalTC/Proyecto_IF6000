@@ -8,9 +8,11 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 ## Estado actual (07/11/2026)
 
 - ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes.
-- ✅ **Fase 1 – Grecia:** configurada (Sebastián, 03/11) y probada (07/11). Scripts en `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt`.
-- 🟨 **Fase 2 – San Ramón + WAN GRE–SR:** scripts listos en `configs/san-ramon/` y `configs/grecia/GRE-RT01/GRE-RT01-fase2.txt`, pendientes de aplicar.
-- ❓ Pendiente de confirmar: EIGRP como protocolo definitivo (D5.1), versión de Packet Tracer del grupo.
+- ✅ **Fase 1 – Grecia:** configurada (Sebastián, 03/11) y probada (07/11).
+- ✅ **Fase 2 – San Ramón + WAN GRE–SR + EIGRP:** configurada y probada (07/11). Ping entre sedes OK.
+- ⏭️ **Próximo:** Fase 3 – Pérez Zeledón + cierre del triángulo WAN + prueba de respaldo (opcional +10).
+- 📌 **Faltantes de fases cerradas:** respaldo `pkt/versiones/fase2-san-ramon-wan.pkt`; capturas de pruebas en `pruebas/grecia/`, `pruebas/san-ramon/` y `pruebas/wan/`.
+- ❓ Pendiente de confirmar con el grupo: EIGRP como protocolo definitivo (D5.1), versión de Packet Tracer.
 
 ---
 
@@ -25,8 +27,9 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 7. [D2 – Equipos y VLANs](#d2--equipos-y-vlans)
 8. [D3 – Puertos, conexiones e IPs fijas](#d3--puertos-conexiones-e-ips-fijas)
 9. [Topología física (Fase 0)](#topología-física-fase-0)
-10. [Pendientes](#pendientes)
-11. [Comandos de referencia (vistos en clase)](#comandos-de-referencia-vistos-en-clase)
+10. [Problemas encontrados y solución](#problemas-encontrados-y-solución)
+11. [Pendientes](#pendientes)
+12. [Comandos de referencia (vistos en clase)](#comandos-de-referencia-vistos-en-clase)
 
 ---
 
@@ -100,10 +103,10 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 
 | Fase | Contenido | Estado |
 | --- | --- | --- |
-| 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (D5 se decide antes de la Fase 2) |
+| 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (26/10) |
 | 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ✅ Listo (07/11) |
-| 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | 🟨 En curso (scripts listos) |
-| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | Pendiente |
+| 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | ✅ Listo (07/11) |
+| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | ⏭️ Siguiente |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
 | 5 | **Seguridad** en los 12 equipos: enable/consola, 3 usuarios, SSH, banner, `shutdown` de puertos sin uso | Pendiente |
 | 6 | Batería final de pruebas (incluye SSH desde las laptops admin) + guía para la comprobación | Pendiente |
@@ -350,10 +353,23 @@ Nomenclatura de equipos finales: `SEDE-DEPTO-PC##` (VEN, PRO, DES, GER, BOD, CON
 
 ---
 
+## Problemas encontrados y solución
+
+Registro de fallas reales durante la construcción (sirve de repaso para la comprobación individual).
+
+| Fecha | Fase | Síntoma | Diagnóstico | Solución |
+| --- | --- | --- | --- | --- |
+| 07/11 | 2 | Ping de SR-BOD-PC01 a Grecia: `Reply from 172.27.86.129: Destination host unreachable` | La respuesta viene del gateway propio → la LAN de SR funciona, pero SR-RT01 no tiene ruta a Grecia. `show ip interface brief` en SR-RT01: Gi0/2 **up/down** (cable conectado, el otro extremo apagado). En GRE-RT01: Gi0/1 `administratively down` sin IP | Faltaba aplicar `GRE-RT01-fase2.txt` (IP WAN + `no shutdown` + EIGRP). Al aplicarlo se formó el vecino EIGRP y aparecieron las rutas `D` |
+| 03/11 | 1 | Los comandos de Grecia "no aparecían" en el repo | Se escribieron dentro de los `.gitkeep` (y el de SW03 en la carpeta de la sede) | Movidos a `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt` con encabezado; regla agregada en `configs/README.md` |
+
+Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/protocol), `show cdp neighbors` (qué puerto conecta con cuál), `show ip eigrp neighbors`, `show ip route`.
+
+---
+
 ## Pendientes
 
 - [ ] **D4 – Seguridad** (se define antes de la Fase 5): 3 usuarios administradores, contraseñas (enable, consola), texto del banner.
-- [ ] **D5 – Enrutamiento entre sedes** (antes de la Fase 2). Propuesta: **EIGRP AS 10** (visto en semanas 10–11; OSPF se ve en noviembre). Con la /23 basta `network 172.27.86.0 0.0.1.255` + `no auto-summary` en los 3 routers, y el triángulo da el respaldo automático del opcional.
+- [x] **D5 – Enrutamiento entre sedes:** EIGRP AS 10 en uso desde la Fase 2 (D5.1), falta confirmación del grupo.
 - [ ] **Versión de Packet Tracer** del grupo (todos la misma).
 - [ ] **D6 – Plan de pruebas de conectividad** (30 pts).
 - [ ] Nombres de los integrantes para el archivo final `NOMBRE-NOMBRE-NOMBRE.PKT`.

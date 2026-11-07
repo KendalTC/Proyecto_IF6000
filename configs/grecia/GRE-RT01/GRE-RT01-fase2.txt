@@ -8,7 +8,7 @@
 ! Requiere ..: GRE-RT01-fase1 aplicado
 ! Decisiones : D1.4, D3.1, D5 (EIGRP propuesto)
 ! Autor .....: Claude / KendalTC (07/11/2026)
-! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+! Estado ....: [ ] Pendiente  [x] Aplicado  [x] Probado (07/11/2026)
 !------------------------------------------------------------
 ! VERIFICAR:
 !   show ip interface brief -> Gi0/1 up/up con 172.27.87.129

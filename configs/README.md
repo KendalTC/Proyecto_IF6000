@@ -42,14 +42,14 @@ Reglas:
 
 | Equipo | Archivos | Estado |
 | --- | --- | --- |
-| GRE-RT01 | `GRE-RT01-fase1.txt` · `GRE-RT01-fase2.txt` | ✅ Fase 1 probada · ⬜ Fase 2 (WAN + EIGRP) sin aplicar |
+| GRE-RT01 | `GRE-RT01-fase1.txt` · `GRE-RT01-fase2.txt` | ✅ Fase 1 y 2 probadas (07/11) |
 | GRE-SW01 | `GRE-SW01-fase1.txt` | ✅ Probado (07/11) |
 | GRE-SW02 | `GRE-SW02-fase1.txt` | ✅ Probado (07/11) |
 | GRE-SW03 | `GRE-SW03-fase1.txt` | ✅ Probado (07/11) |
-| SR-RT01 | `SR-RT01-fase2.txt` | ⬜ Listo, sin aplicar |
-| SR-SW01 | `SR-SW01-fase2.txt` | ⬜ Listo, sin aplicar |
-| SR-SW02 | `SR-SW02-fase2.txt` | ⬜ Listo, sin aplicar |
-| SR-SW03 | `SR-SW03-fase2.txt` | ⬜ Listo, sin aplicar |
+| SR-RT01 | `SR-RT01-fase2.txt` | ✅ Probado (07/11) |
+| SR-SW01 | `SR-SW01-fase2.txt` | ✅ Probado (07/11) |
+| SR-SW02 | `SR-SW02-fase2.txt` | ✅ Probado (07/11) |
+| SR-SW03 | `SR-SW03-fase2.txt` | ✅ Probado (07/11) |
 | PZ-RT01 · PZ-SW01 · PZ-SW02 · PZ-SW03 | — | ⬜ Sin configurar |
 
 Leyenda: ⬜ sin aplicar · 🟨 aplicado · ✅ probado (con capturas en `pruebas/`).

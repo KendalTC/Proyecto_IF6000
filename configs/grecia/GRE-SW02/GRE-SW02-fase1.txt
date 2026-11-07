@@ -8,7 +8,7 @@
 ! Requiere ..: Topologia fisica Fase 0
 ! Decisiones : D2.3, D3.1, D3.2
 ! Autor .....: Sebastian Alfaro (03/11/2026)
-! Estado ....: [ ] Pendiente  [x] Aplicado  [ ] Probado
+! Estado ....: [ ] Pendiente  [x] Aplicado  [x] Probado (07/11/2026)
 !------------------------------------------------------------
 ! VERIFICAR:
 !   show vlan brief -> Fa0/1-20 en VLAN 200
