@@ -1,0 +1,97 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Perez Zeledon
+! Equipo ....: PZ-RT01  (Cisco 2911)
+! Bloque ....: Configuracion Fase 3 (sin seguridad)
+! Fase ......: 3
+! Que hace ..: Hostname, router-on-a-stick (VLAN 100/300/500/600/900), DHCP de los 4 departamentos, enlaces WAN hacia SR (Gi0/2) y Grecia (Gi0/1), EIGRP 10.
+! Requiere ..: Topologia fisica Fase 0; SR-RT01-fase3 y GRE-RT01-fase3 para que los enlaces WAN levanten
+! Decisiones : D1.4-D1.6, D2.1, D2.3, D3.1, D3.2, D5.1
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/0, 5 subinterfaces, Gi0/1 y Gi0/2 up/up
+!   show cdp neighbors -> GRE-RT01 por Gi0/1 y SR-RT01 por Gi0/2
+!   show ip eigrp neighbors -> 2 vecinos: 172.27.87.133 (SR) y 172.27.87.138 (GRE)
+!   show ip route -> rutas "D" hacia Grecia (172.27.86.0-.127) y San Ramon (172.27.86.128-.255)
+! SI FALLA:
+!   WAN up/down -> el otro extremo no tiene no shutdown (falta su archivo fase3)
+!   WAN down/down -> el cable esta en otro puerto: revisar show cdp neighbors
+!============================================================
+enable
+configure terminal
+hostname PZ-RT01
+no ip domain-lookup
+!
+! --- Interfaz fisica hacia la LAN: solo se enciende, las IPs van en subinterfaces ---
+interface GigabitEthernet0/0
+ description TRUNK-A-PZ-SW01
+ no shutdown
+!
+! --- Router-on-a-stick: un gateway por VLAN (primera IP usable, D1.6) ---
+interface GigabitEthernet0/0.100
+ description VLAN100-GERENCIA-NATIVA
+ encapsulation dot1Q 100 native
+ ip address 172.27.87.65 255.255.255.224
+!
+interface GigabitEthernet0/0.300
+ description VLAN300-VENTAS
+ encapsulation dot1Q 300
+ ip address 172.27.87.33 255.255.255.224
+!
+interface GigabitEthernet0/0.500
+ description VLAN500-BODEGA
+ encapsulation dot1Q 500
+ ip address 172.27.87.1 255.255.255.224
+!
+interface GigabitEthernet0/0.600
+ description VLAN600-CONTABILIDAD
+ encapsulation dot1Q 600
+ ip address 172.27.87.97 255.255.255.240
+!
+interface GigabitEthernet0/0.900
+ description VLAN900-ADMIN-SSH
+ encapsulation dot1Q 900
+ ip address 172.27.87.113 255.255.255.248
+!
+! --- Enlaces WAN (triangulo: Gi0/1 sale a la siguiente sede, Gi0/2 recibe a la anterior) ---
+interface GigabitEthernet0/2
+ description WAN-A-SR-RT01-Gi0/1
+ ip address 172.27.87.134 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ description WAN-A-GRE-RT01-Gi0/2
+ ip address 172.27.87.137 255.255.255.252
+ no shutdown
+!
+! --- DHCP: se excluye el gateway de cada pool (D3.2) ---
+ip dhcp excluded-address 172.27.87.1
+ip dhcp excluded-address 172.27.87.33
+ip dhcp excluded-address 172.27.87.65
+ip dhcp excluded-address 172.27.87.97
+!
+ip dhcp pool PZ-BODEGA
+ network 172.27.87.0 255.255.255.224
+ default-router 172.27.87.1
+!
+ip dhcp pool PZ-VENTAS
+ network 172.27.87.32 255.255.255.224
+ default-router 172.27.87.33
+!
+ip dhcp pool PZ-GERENCIA
+ network 172.27.87.64 255.255.255.224
+ default-router 172.27.87.65
+!
+ip dhcp pool PZ-CONTABILIDAD
+ network 172.27.87.96 255.255.255.240
+ default-router 172.27.87.97
+!
+! --- Enrutamiento EIGRP: la /23 completa en una sola linea (D5.1) ---
+router eigrp 10
+ network 172.27.86.0 0.0.1.255
+ no auto-summary
+!
+end
+write memory

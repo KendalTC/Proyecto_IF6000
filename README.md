@@ -10,8 +10,9 @@ Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes
 - ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes.
 - ✅ **Fase 1 – Grecia:** configurada (Sebastián, 03/11) y probada (07/11).
 - ✅ **Fase 2 – San Ramón + WAN GRE–SR + EIGRP:** configurada y probada (07/11). Ping entre sedes OK.
-- ⏭️ **Próximo:** Fase 3 – Pérez Zeledón + cierre del triángulo WAN + prueba de respaldo (opcional +10).
-- 📌 **Faltantes de fases cerradas:** respaldo `pkt/versiones/fase2-san-ramon-wan.pkt`; capturas de pruebas en `pruebas/grecia/`, `pruebas/san-ramon/` y `pruebas/wan/`.
+- 🟨 **Fase 3 – Pérez Zeledón + cierre del triángulo:** scripts listos (`configs/perez-zeledon/`, `SR-RT01-fase3.txt`, `GRE-RT01-fase3.txt`), pendientes de aplicar.
+- 📌 **Faltantes de fases cerradas:** respaldo `pkt/versiones/fase2-san-ramon-wan.pkt`.
+- 📸 **Capturas de pruebas:** asignadas a **Mariangel**, se harán cuando haya más configuración (ver Pendientes).
 - ❓ Pendiente de confirmar con el grupo: EIGRP como protocolo definitivo (D5.1), versión de Packet Tracer.
 
 ---
@@ -106,7 +107,7 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 | 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (26/10) |
 | 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ✅ Listo (07/11) |
 | 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | ✅ Listo (07/11) |
-| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | ⏭️ Siguiente |
+| 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | 🟨 En curso (scripts listos) |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |
 | 5 | **Seguridad** en los 12 equipos: enable/consola, 3 usuarios, SSH, banner, `shutdown` de puertos sin uso | Pendiente |
 | 6 | Batería final de pruebas (incluye SSH desde las laptops admin) + guía para la comprobación | Pendiente |
@@ -372,6 +373,12 @@ Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/p
 - [x] **D5 – Enrutamiento entre sedes:** EIGRP AS 10 en uso desde la Fase 2 (D5.1), falta confirmación del grupo.
 - [ ] **Versión de Packet Tracer** del grupo (todos la misma).
 - [ ] **D6 – Plan de pruebas de conectividad** (30 pts).
+- [ ] **Capturas de pruebas — Mariangel** (cuando haya más configuración). Guardar `.png` en `pruebas/<sede>/` según `pruebas/README.md`. Mínimo por fase cerrada:
+    - Grecia: ping de GRE-VEN-PC01 a Producción (.34), Desarrollo (.66), Gerencia (.98) y laptop (.117); `ipconfig` de un PC con DHCP; `show vlan brief` y `show interfaces trunk` de un switch.
+    - San Ramón: lo mismo con SR-BOD-PC01 (.162, .194, .226, .245).
+    - WAN: ping de SR-BOD-PC01 a GRE-VEN-PC01 (172.27.86.2); `show ip eigrp neighbors` y `show ip route` en los 3 routers.
+    - Pérez Zeledón: ping de PZ-BOD-PC01 a .87.34, .87.66, .87.98 y .87.117; ping a Grecia (172.27.86.2) y a San Ramón (172.27.86.130).
+    - **Respaldo (opcional +10):** `tracert 172.27.86.2` desde PZ-BOD-PC01 antes y después de apagar el enlace PZ–GRE (GRE-RT01 `interface gi0/2` → `shutdown`), mostrando que la ruta cambia por San Ramón.
 - [ ] Nombres de los integrantes para el archivo final `NOMBRE-NOMBRE-NOMBRE.PKT`.
 
 ---

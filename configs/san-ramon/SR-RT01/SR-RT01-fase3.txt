@@ -1,0 +1,29 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: San Ramon
+! Equipo ....: SR-RT01  (Cisco 2911)
+! Bloque ....: Configuracion Fase 3 (sin seguridad)
+! Fase ......: 3
+! Que hace ..: Levanta el enlace WAN hacia Perez Zeledon (Gi0/1). Se aplica ENCIMA de SR-RT01-fase2. EIGRP ya cubre la red (network de la /23).
+! Requiere ..: SR-RT01-fase2 aplicado
+! Decisiones : D1.4, D3.1, D5.1
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/1 up/up con 172.27.87.133
+!   show ip eigrp neighbors -> 2 vecinos: .129 (GRE) y .134 (PZ)
+! SI FALLA:
+!   Gi0/1 up/down -> falta PZ-RT01-fase3 en el otro extremo
+!============================================================
+enable
+configure terminal
+!
+! --- Enlace WAN hacia Perez Zeledon (172.27.87.132/30, SR = .133) ---
+interface GigabitEthernet0/1
+ description WAN-A-PZ-RT01-Gi0/2
+ ip address 172.27.87.133 255.255.255.252
+ no shutdown
+!
+end
+write memory

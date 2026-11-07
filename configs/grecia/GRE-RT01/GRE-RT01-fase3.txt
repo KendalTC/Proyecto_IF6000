@@ -1,0 +1,29 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Grecia (Zona Franca)
+! Equipo ....: GRE-RT01  (Cisco 2911)
+! Bloque ....: Configuracion Fase 3 (sin seguridad)
+! Fase ......: 3
+! Que hace ..: Levanta el enlace WAN hacia Perez Zeledon (Gi0/2) y cierra el triangulo. Se aplica ENCIMA de GRE-RT01-fase2.
+! Requiere ..: GRE-RT01-fase2 aplicado
+! Decisiones : D1.4, D3.1, D5.1
+! Autor .....: Claude / KendalTC (07/11/2026)
+! Estado ....: [x] Pendiente  [ ] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/2 up/up con 172.27.87.138
+!   show ip eigrp neighbors -> 2 vecinos: .130 (SR) y .137 (PZ)
+! SI FALLA:
+!   Gi0/2 up/down -> falta PZ-RT01-fase3 en el otro extremo
+!============================================================
+enable
+configure terminal
+!
+! --- Enlace WAN hacia Perez Zeledon (172.27.87.136/30, GRE = .138) ---
+interface GigabitEthernet0/2
+ description WAN-A-PZ-RT01-Gi0/1
+ ip address 172.27.87.138 255.255.255.252
+ no shutdown
+!
+end
+write memory
