@@ -5,10 +5,10 @@ Curso IF6000 Redes en los Negocios II – UCR, II Ciclo 2026. Entrega presencial
 
 Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes, VLANs, puertos, IPs) se registra aquí antes de configurarla en Packet Tracer.
 
-## Estado actual (26/10/2026)
+## Estado actual (07/11/2026)
 
-- ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes armada en `pkt/ClavitoVeloz.pkt` (respaldo en `pkt/versiones/fase0-topologia-fisica.pkt`), sin configuración.
-- ⏭️ **Próxima sesión:** Fase 1 – configuración de Grecia (VLANs, trunks, router-on-a-stick, DHCP, Gerencia estática, VLAN 900).
+- ✅ Fase 0: decisiones D1–D3 y topología física de las 3 sedes.
+- 🟨 **Fase 1 – Grecia:** configuración aplicada por Sebastián (03/11) → scripts en `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt`, .pkt en `pkt/versiones/fase1-grecia-lan.pkt`. **Falta:** pruebas de conectividad con capturas en `pruebas/grecia/` y actualizar `pkt/ClavitoVeloz.pkt`.
 - ❓ Pendiente de decidir: D5 enrutamiento (propuesta: EIGRP), versión de Packet Tracer del grupo.
 
 ---
@@ -100,7 +100,7 @@ Cada fase termina con un .pkt funcional guardado en `pkt/versiones/`.
 | Fase | Contenido | Estado |
 | --- | --- | --- |
 | 0 | Decisiones base + topología física sin configurar (3 sedes, triángulo WAN) | ✅ Listo (D5 se decide antes de la Fase 2) |
-| 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | ⏭️ Siguiente |
+| 1 | Grecia LAN: hostname y descripciones; VLANs, trunks, subinterfaces, DHCP, Gerencia estática, VLAN 900 con IPs; pings | 🟨 Aplicada, falta probar |
 | 2 | San Ramón LAN (misma receta) + enlace WAN GRE–SR + enrutamiento | Pendiente |
 | 3 | Pérez Zeledón LAN + triángulo WAN + prueba de respaldo (opcional) | Pendiente |
 | 4 | Poblar con los 182 PCs; etiquetado y presentación | Pendiente |

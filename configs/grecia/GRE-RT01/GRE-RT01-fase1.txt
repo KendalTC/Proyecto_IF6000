@@ -1,0 +1,79 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Grecia (Zona Franca)
+! Equipo ....: GRE-RT01  (Cisco 2911)
+! Bloque ....: Configuracion base Fase 1 (sin seguridad)
+! Fase ......: 1
+! Que hace ..: Hostname, router-on-a-stick (subinterfaces VLAN 100/200/300/400/900) y DHCP de Ventas, Produccion y Desarrollo.
+! Requiere ..: Topologia fisica Fase 0
+! Decisiones : D1.1-D1.6, D2.1, D2.3, D3.1, D3.2
+! Autor .....: Sebastian Alfaro (03/11/2026)
+! Estado ....: [ ] Pendiente  [x] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip interface brief -> Gi0/0 y sus 5 subinterfaces up/up
+!   show ip dhcp pool -> 3 pools (GRE-VENTAS, GRE-PRODUCCION, GRE-DESARROLLO)
+!   show ip dhcp binding -> IPs entregadas a las PCs
+! SI FALLA:
+!   Subinterfaces down -> falta "no shutdown" en Gi0/0
+!   PC sin IP por DHCP -> revisar trunk del switch y encapsulation dot1Q
+!============================================================
+enable
+configure terminal
+hostname GRE-RT01
+
+interface GigabitEthernet0/0
+ description TRUNK-A-GRE-SW01
+ no shutdown
+!
+interface GigabitEthernet0/0.100
+ description VLAN100-GERENCIA-NATIVA
+ encapsulation dot1Q 100 native
+ ip address 172.27.86.97 255.255.255.240
+!
+interface GigabitEthernet0/0.200
+ description VLAN200-PRODUCCION
+ encapsulation dot1Q 200
+ ip address 172.27.86.33 255.255.255.224
+!
+interface GigabitEthernet0/0.300
+ description VLAN300-VENTAS
+ encapsulation dot1Q 300
+ ip address 172.27.86.1 255.255.255.224
+!
+interface GigabitEthernet0/0.400
+ description VLAN400-DESARROLLO
+ encapsulation dot1Q 400
+ ip address 172.27.86.65 255.255.255.224
+!
+interface GigabitEthernet0/0.900
+ description VLAN900-ADMIN-SSH
+ encapsulation dot1Q 900
+ ip address 172.27.86.113 255.255.255.248
+!
+interface GigabitEthernet0/1
+ description WAN-A-SR-RT01-RESERVADO-FASE2
+!
+interface GigabitEthernet0/2
+ description WAN-A-PZ-RT01-RESERVADO-FASE3
+!
+
+ip dhcp excluded-address 172.27.86.1
+ip dhcp excluded-address 172.27.86.33
+ip dhcp excluded-address 172.27.86.65
+
+ip dhcp pool GRE-VENTAS
+ network 172.27.86.0 255.255.255.224
+ default-router 172.27.86.1
+!
+ip dhcp pool GRE-PRODUCCION
+ network 172.27.86.32 255.255.255.224
+ default-router 172.27.86.33
+!
+ip dhcp pool GRE-DESARROLLO
+ network 172.27.86.64 255.255.255.224
+ default-router 172.27.86.65
+!
+
+end
+write memory

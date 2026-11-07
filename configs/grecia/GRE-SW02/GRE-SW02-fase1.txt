@@ -1,0 +1,66 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Grecia (Zona Franca)
+! Equipo ....: GRE-SW02  (Cisco 2960-24TT)
+! Bloque ....: Configuracion base Fase 1 (sin seguridad)
+! Fase ......: 1
+! Que hace ..: Hostname, VLANs, acceso Produccion (Fa0/1-20), trunks hacia GRE-SW01 y GRE-SW03, IP de gestion VLAN 900.
+! Requiere ..: Topologia fisica Fase 0
+! Decisiones : D2.3, D3.1, D3.2
+! Autor .....: Sebastian Alfaro (03/11/2026)
+! Estado ....: [ ] Pendiente  [x] Aplicado  [ ] Probado
+!------------------------------------------------------------
+! VERIFICAR:
+!   show vlan brief -> Fa0/1-20 en VLAN 200
+!   show interfaces trunk -> Gi0/1 y Gi0/2 trunking, native 100
+!   ping 172.27.86.113 -> exito
+! SI FALLA:
+!   NATIVE_VLAN_MISMATCH -> la nativa no es 100 en el otro extremo
+!============================================================
+enable
+configure terminal
+hostname GRE-SW02
+
+vlan 100
+ name GERENCIA
+exit
+vlan 200
+ name PRODUCCION
+exit
+vlan 300
+ name VENTAS
+exit
+vlan 400
+ name DESARROLLO
+exit
+vlan 900
+ name ADMIN-SSH
+exit
+
+interface range FastEthernet0/1-20
+ description ACCESO-PRODUCCION
+ switchport mode access
+ switchport access vlan 200
+!
+interface range FastEthernet0/21-24
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+!
+interface GigabitEthernet0/1
+ description TRUNK-A-GRE-SW01
+ switchport mode trunk
+ switchport trunk native vlan 100
+!
+interface GigabitEthernet0/2
+ description TRUNK-A-GRE-SW03
+ switchport mode trunk
+ switchport trunk native vlan 100
+!
+interface Vlan900
+ description MGMT-VLAN900
+ ip address 172.27.86.115 255.255.255.248
+ no shutdown
+!
+ip default-gateway 172.27.86.113
+
+end
+write memory
