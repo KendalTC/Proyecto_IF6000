@@ -1,0 +1,67 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: Pérez Zeledón
+! Equipo ....: PZ-SW02  (Cisco 2960-24TT)
+! Bloque ....: Configuracion Fase 5 (con seguridad)
+! Fase ......: 5
+! Que hace ..: Seguridad: 3 usuarios admin, banner, solo SSH v2; shutdown Fa0/21-23
+! Requiere ..: Fase 1 aplicada (VLAN 900, IP de gestion 172.27.87.114); hostname puesto
+! Decisiones : D4 - usuarios kendal, mariangel y sebas; enable secret;
+!              banner MOTD; SSH v2 como unico acceso remoto
+! Autor .....: NOMBRE (08/11/2026)
+! Estado ....: [ ] Pendiente  [X] Aplicado  [ ] Probado (__/__/2026)
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip ssh -> SSH Enabled - version 2.0
+!   ssh -l kendal 172.27.87.114 desde PZ-ADM-LT01 -> entra y muestra banner
+!   show interfaces status -> sin uso en 'disabled', PCs en 'connected'
+! SI FALLA:
+!   show running-config | include username -> deben estar los 3 usuarios
+!   show ip ssh -> si dice 1.99, falta 'ip ssh version 2'
+!   line vty 0 15 -> 'login local' y 'transport input ssh'
+!   si no hay llave RSA: crypto key generate rsa (2048)
+!============================================================
+
+PZ-SW02>enable
+PZ-SW02#configure terminal
+
+PZ-SW02(config)#no ip domain-lookup
+PZ-SW02(config)#ip domain-name clavitoveloz.com
+PZ-SW02(config)#enable secret proyecto
+PZ-SW02(config)#service password-encryption
+PZ-SW02(config)#username kendal privilege 15 secret redes
+PZ-SW02(config)#username mariangel privilege 15 secret redes
+PZ-SW02(config)#username sebas privilege 15 secret redes
+
+PZ-SW02(config)#banner motd "ACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ"
+
+PZ-SW02(config)#line console 0
+PZ-SW02(config-line)#login local
+PZ-SW02(config-line)# logging synchronous
+PZ-SW02(config-line)# exec-timeout 5 0
+PZ-SW02(config-line)# exit
+
+PZ-SW02(config)#line vty 0 15
+PZ-SW02(config-line)#login local
+PZ-SW02(config-line)# transport input ssh
+PZ-SW02(config-line)#exec-timeout 5 0
+PZ-SW02(config-line)#exit
+
+PZ-SW02(config)#crypto key generate rsa
+The name for the keys will be: PZ-SW02.clavitoveloz.com
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 2048
+% Generating 2048 bit RSA keys, keys will be non-exportable...[OK]
+
+PZ-SW02(config)#ip ssh version 2
+PZ-SW02(config)#do wr
+
+
+PZ-SW02(config)#interface range fa0/17 - 24
+ PZ-SW02(config-line)#description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ PZ-SW02(config-line)#shutdown
+ PZ-SW02(config-line)#exit
+PZ-SW02(config)#do wr

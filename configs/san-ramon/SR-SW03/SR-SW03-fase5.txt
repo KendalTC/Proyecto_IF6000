@@ -1,0 +1,74 @@
+!============================================================
+! PROYECTO IF6000 - Ferreteria El Clavito Veloz
+! Sede ......: San Ramón
+! Equipo ....: SR-SW03  (Cisco 2960-24TT)
+! Bloque ....: Configuracion Fase 5 (con seguridad)
+! Fase ......: 5
+! Que hace ..: Seguridad: 3 usuarios admin, banner, solo SSH v2; shutdown Fa0/21-23
+! Requiere ..: Fase 1 aplicada (VLAN 900, IP de gestion 172.27.86.242); hostname puesto
+! Decisiones : D4 - usuarios kendal, mariangel y sebas; enable secret;
+!              banner MOTD; SSH v2 como unico acceso remoto
+! Autor .....: NOMBRE (08/11/2026)
+! Estado ....: [ ] Pendiente  [X] Aplicado  [ ] Probado (__/__/2026)
+!------------------------------------------------------------
+! VERIFICAR:
+!   show ip ssh -> SSH Enabled - version 2.0
+!   ssh -l kendal 172.27.86.242 desde SR-ADM-LT01 -> entra y muestra banner
+!   show interfaces status -> sin uso en 'disabled', PCs en 'connected'
+! SI FALLA:
+!   show running-config | include username -> deben estar los 3 usuarios
+!   show ip ssh -> si dice 1.99, falta 'ip ssh version 2'
+!   line vty 0 15 -> 'login local' y 'transport input ssh'
+!   si no hay llave RSA: crypto key generate rsa (2048)
+!============================================================
+
+SR-SW03>enable 
+SR-SW03#configure terminal 
+
+SR-SW03(config)#no ip domain-lookup
+SR-SW03(config)#ip domain-name clavitoveloz.com
+SR-SW03(config)#enable secret proyecto
+SR-SW03(config)#service password-encryption
+SR-SW03(config)#username kendal privilege 15 secret redes
+SR-SW03(config)#username mariangel privilege 15 secret redes
+SR-SW03(config)#username sebas privilege 15 secret redes
+
+
+SR-SW03(config)#banner motd "ACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ"
+
+SR-SW03(config)#line console 0
+SR-SW03(config-line)#login local
+SR-SW03(config-line)#logging synchronous
+SR-SW03(config-line)#exec-timeout 5 0
+SR-SW03(config-line)#exit
+
+SR-SW03(config)#line vty 0 15
+SR-SW03(config-line)# login local
+SR-SW03(config-line)#transport input ssh
+SR-SW03(config-line)#exec-timeout 5 0
+SR-SW03(config-line)#exit
+
+SR-SW03(config)#crypto key generate rsa
+The name for the keys will be: SR-SW03.clavitoveloz.com
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 2048
+% Generating 2048 bit RSA keys, keys will be non-exportable...[OK]
+
+
+SR-SW03(config)#ip ssh version 2
+SR-SW03(config)#do wr
+
+
+SR-SW03(config)#interface range fa0/23 - 24
+ SR-SW03(config-line)#description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ SR-SW03(config-line)#shutdown
+ SR-SW03(config-line)#exit
+
+SR-SW03(config)#interface gi0/2
+ SR-SW03(config-line)#description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ SR-SW03(config-line)#shutdown
+ SR-SW03(config-line)#exit
+SR-SW03(config)#do wr
