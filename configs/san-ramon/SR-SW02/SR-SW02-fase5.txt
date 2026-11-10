@@ -1,70 +1,70 @@
 !============================================================
 ! PROYECTO IF6000 - Ferreteria El Clavito Veloz
-! Sede ......: San Ramón
+! Sede ......: San Ramon
 ! Equipo ....: SR-SW02  (Cisco 2960-24TT)
-! Bloque ....: Configuracion Fase 5 (con seguridad)
+! Bloque ....: Configuracion Fase 5 - Seguridad
 ! Fase ......: 5
-! Que hace ..: Seguridad: 3 usuarios admin, banner, solo SSH v2; shutdown Fa0/21-23
-! Requiere ..: Fase 1 aplicada (VLAN 900, IP de gestion 172.27.86.242); hostname puesto
-! Decisiones : D4 - usuarios kendal, mariangel y sebas; enable secret;
-!              banner MOTD; SSH v2 como unico acceso remoto
-! Autor .....: NOMBRE (08/11/2026)
-! Estado ....: [ ] Pendiente  [X] Aplicado  [ ] Probado (__/__/2026)
+! Que hace ..: 3 usuarios admin, enable secret, banner, consola y VTY con login local, VTY solo SSH v2; shutdown de puertos sin uso (Fa0/17-24)
+! Requiere ..: Fase 2 aplicada; hostname puesto (lo usa la llave RSA)
+! Decisiones : D4.1, D4.2, D4.3
+! Autor .....: Jose Solorzano (08/11/2026) - formato: Claude/KendalTC (09/11)
+! Estado ....: [ ] Pendiente  [x] Aplicado  [x] Probado (Jose)
 !------------------------------------------------------------
 ! VERIFICAR:
 !   show ip ssh -> SSH Enabled - version 2.0
-!   ssh -l kendal 172.27.86.242 desde SR-ADM-LT01 -> entra y muestra banner
-!   show interfaces status -> sin uso en 'disabled', PCs en 'connected'
+!   ssh -l kendal 172.27.86.243 desde SR-ADM-LT01 -> pide clave (redes), muestra el banner y entra
+!   telnet 172.27.86.243 desde SR-ADM-LT01 -> rechazado
+!   show running-config | include username -> exactamente 3 usuarios
+!   show interfaces status -> puertos sin uso en "disabled"
 ! SI FALLA:
-!   show running-config | include username -> deben estar los 3 usuarios
-!   show ip ssh -> si dice 1.99, falta 'ip ssh version 2'
-!   line vty 0 15 -> 'login local' y 'transport input ssh'
-!   si no hay llave RSA: crypto key generate rsa (2048)
+!   show ip ssh dice 1.99 -> falta "ip ssh version 2"
+!   "% Please define a domain-name first" -> falta ip domain-name
+!   SSH rechaza la clave -> revisar username ... secret redes
+!   Consola pide usuario: usar kendal / mariangel / sebas, clave redes
 !============================================================
-
-
-SR-SW02>enable 
-SR-SW02#configure terminal 
-
-
-SR-SW02(config)#no ip domain-lookup
-SR-SW02(config)#ip domain-name clavitoveloz.com
-SR-SW02(config)#enable secret proyecto
-SR-SW02(config)#service password-encryption
-SR-SW02(config)#username kendal privilege 15 secret redes
-SR-SW02(config)#username mariangel privilege 15 secret redes
-SR-SW02(config)#username sebas privilege 15 secret redes
-
-SR-SW02(config)#banner motd "ACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ"
-
-SR-SW02(config)#line console 0
-SR-SW02(config-line)# login local
-SR-SW02(config-line)#logging synchronous
-SR-SW02(config-line)# exec-timeout 5 0
-SR-SW02(config-line)#exit
-
-SR-SW02(config)#line vty 0 15
-SR-SW02(config-line)#login local
-SR-SW02(config-line)#transport input ssh
-SR-SW02(config-line)#exec-timeout 5 0
-SR-SW02(config-line)#exit
-
-SR-SW02(config)#crypto key generate rsa
-The name for the keys will be: SR-SW02.clavitoveloz.com
-Choose the size of the key modulus in the range of 360 to 4096 for your
-  General Purpose Keys. Choosing a key modulus greater than 512 may take
-  a few minutes.
-
-How many bits in the modulus [512]: 2048
-% Generating 2048 bit RSA keys, keys will be non-exportable...[OK]
-
-
-SR-SW02(config)#ip ssh version 2
-SR-SW02(config)#do wr
-
-
-SR-SW02(config)#interface range fa0/17 - 24
- SR-SW02(config-line)#description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
- SR-SW02(config-line)#shutdown
- SR-SW02(config-line)#exit
-SR-SW02(config)#do wr
+enable
+configure terminal
+!
+! --- Base: sin busqueda DNS y dominio (requisito para la llave RSA) ---
+no ip domain-lookup
+ip domain-name clavitoveloz.com
+!
+! --- Contrasenas: enable cifrado y cifrado de las que quedan en texto ---
+enable secret proyecto
+service password-encryption
+!
+! --- Exactamente 3 administradores (punto 7 del enunciado) ---
+username kendal privilege 15 secret redes
+username mariangel privilege 15 secret redes
+username sebas privilege 15 secret redes
+!
+! --- Mensaje de bienvenida (punto 4 del enunciado) ---
+banner motd "ACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ"
+!
+! --- Consola: pide usuario local, no corta lo que se escribe, cierra a los 5 min ---
+line console 0
+ login local
+ logging synchronous
+ exec-timeout 5 0
+exit
+!
+! --- Acceso remoto: solo SSH, con usuarios locales ---
+line vty 0 15
+ login local
+ transport input ssh
+ exec-timeout 5 0
+exit
+!
+! --- SSH version 2 con llave RSA de 2048 bits ---
+! (si Packet Tracer no acepta la linea completa: "crypto key generate rsa" y responder 2048)
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+!
+! --- Puertos sin uso apagados (D4.3) ---
+interface range FastEthernet0/17-24
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ shutdown
+exit
+!
+end
+write memory

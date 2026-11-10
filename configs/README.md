@@ -40,19 +40,17 @@ Reglas:
 
 ## Estado
 
-| Equipo | Archivos | Estado |
-| --- | --- | --- |
-| GRE-RT01 | `GRE-RT01-fase1.txt` · `GRE-RT01-fase2.txt` · `GRE-RT01-fase3.txt` | ✅ Fases 1, 2 y 3 aplicadas |
-| GRE-SW01 | `GRE-SW01-fase1.txt` | ✅ Probado (07/11) |
-| GRE-SW02 | `GRE-SW02-fase1.txt` | ✅ Probado (07/11) |
-| GRE-SW03 | `GRE-SW03-fase1.txt` | ✅ Probado (07/11) |
-| SR-RT01 | `SR-RT01-fase2.txt` · `SR-RT01-fase3.txt` | ✅ Fases 2 y 3 aplicadas |
-| SR-SW01 | `SR-SW01-fase2.txt` | ✅ Probado (07/11) |
-| SR-SW02 | `SR-SW02-fase2.txt` | ✅ Probado (07/11) |
-| SR-SW03 | `SR-SW03-fase2.txt` | ✅ Probado (07/11) |
-| PZ-RT01 | `PZ-RT01-fase3.txt` | ✅ Aplicado (07/11) |
-| PZ-SW01 | `PZ-SW01-fase3.txt` | ✅ Aplicado (07/11) |
-| PZ-SW02 | `PZ-SW02-fase3.txt` | ✅ Aplicado (07/11) |
-| PZ-SW03 | `PZ-SW03-fase3.txt` | ✅ Aplicado (07/11) |
+| Equipo | Fase 1 | Fase 2 | Fase 3 | Fase 5 (seguridad) |
+| --- | --- | --- | --- | --- |
+| GRE-RT01 | ✅ | ✅ WAN a SR + EIGRP | ✅ WAN a PZ | ✅ |
+| GRE-SW01 | ✅ | — | — | ✅ |
+| GRE-SW02 | ✅ | — | — | ✅ |
+| GRE-SW03 | ✅ | — | — | ✅ |
+| SR-RT01 | — | ✅ | ✅ WAN a PZ | ✅ |
+| SR-SW01 · SR-SW02 · SR-SW03 | — | ✅ | — | ✅ |
+| PZ-RT01 | — | — | ✅ | ✅ |
+| PZ-SW01 · PZ-SW02 · PZ-SW03 | — | — | ✅ | ✅ |
 
-Leyenda: ⬜ sin aplicar · 🟨 aplicado · ✅ probado (con capturas en `pruebas/`).
+Leyenda: ⬜ sin aplicar · 🟨 aplicado · ✅ probado. La Fase 4 (PCs) no tiene scripts: se hizo en Packet Tracer.
+
+Los `-fase5.txt` tienen el mismo formato que las fases 1–3 (se pueden pegar completos en la CLI). Revalidación final de SSH: [`docs/checklist-entrega.md`](../docs/checklist-entrega.md).
