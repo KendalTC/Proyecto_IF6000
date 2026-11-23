@@ -14,10 +14,10 @@ La red está completa: 3 sedes, 15 VLANs, DHCP, triángulo WAN con EIGRP, los PC
 | 0 – Decisiones + topología física | ✅ 26/10 |
 | 1 – Grecia LAN | ✅ 07/11 (configuró Sebastián el 03/11) |
 | 2 – San Ramón + WAN GRE–SR + EIGRP | ✅ 07/11 |
-| 3 – Pérez Zeledón + triángulo WAN | ✅ 07/11 (falta confirmar la prueba de respaldo) |
+| 3 – Pérez Zeledón + triángulo WAN | ✅ 07/11 · respaldo probado 22/11 |
 | 4 – Poblar los PCs | ✅ 09/11 (Jose) |
 | 5 – Seguridad (SSH, usuarios, banner, puertos) | ✅ 08/11 (Jose) — revalidar con el [checklist de entrega](docs/checklist-entrega.md) |
-| 6 – Pruebas finales + archivo de entrega + guía de estudio | ⬜ |
+| 6 – Pruebas finales + archivo de entrega + guía de estudio | ✅ 22/11 (falta solo nombrar el archivo final) |
 
 **Próxima sesión:** ver [Pendientes](#pendientes).
 
@@ -88,8 +88,8 @@ git push                     # al terminar
 | Kendall (KendalTC) | Diseño y decisiones (D1–D3), topología física, Fases 2 y 3, repositorio |
 | Sebastián Alfaro | Fase 1 – Grecia |
 | Jose Solorzano | Fase 4 – PCs y Fase 5 – Seguridad |
-| Mariangel | Capturas de pruebas (pendiente) |
-| Alejandro | _(por definir)_ |
+| Mariangel | _(por definir)_ |
+| Alejandro Arias | Fase 6 – Verificación final de los 12 equipos, corrección de SSH en PZ-RT01, prueba de respaldo, evidencias etiquetadas, presentación del lienzo, guía de estudio |
 
 Usuarios SSH: el enunciado exige **exactamente 3 administradores** en todos los equipos, por eso hay 3 usuarios (`kendal`, `mariangel`, `sebas`) aunque el grupo sea de 5.
 
@@ -115,7 +115,7 @@ Requisitos clave del enunciado:
 - DHCP con exclusiones; conectividad total entre las 3 sedes.
 - Opcional (+10 pts): 2 o más rutas de respaldo con conmutación automática.
 - Rúbrica: configuración 50 · pruebas de conectividad 30 · presentación/cableado/subneteo 15 · comprobación 5.
-- Archivo final: `NOMBRE-NOMBRE-NOMBRE.PKT`.
+- Archivo final: `NOMBRE-NOMBRE-NOMBRE-NOMBRE.PKT` (así aparece en el PDF; el enunciado también dice grupos de 1 a 3 integrantes).
 
 ---
 
@@ -360,6 +360,8 @@ Aplicada y probada por Jose el 08/11/2026 en los 12 equipos (scripts `configs/<s
 | Modo privilegiado | `enable secret` | `proyecto` |
 | Consola | `line console 0` → `login local` | Pide usuario y contraseña de la tabla |
 
+> **Nota (verificado 22/11):** en los switches 2960 de Packet Tracer el comando `username … privilege 15` se acepta pero no queda guardado (el `show run` muestra `username kendal secret 5 …`). Por eso al entrar por SSH a un switch se llega a `>` y hay que usar `enable` (clave `proyecto`); en los routers se entra directo a `#`. Es una limitación del simulador y además agrega una segunda capa de autenticación.
+
 ### Configuración común
 
 | Bloque | Comandos |
@@ -452,6 +454,7 @@ Registro de fallas reales durante la construcción (sirve de repaso para la comp
 
 | Fecha | Fase | Síntoma | Diagnóstico | Solución |
 | --- | --- | --- | --- | --- |
+| 22/11 | 6 | Revisión final: `show ip ssh` en PZ-RT01 → *SSH Enabled - version 1.99* (los otros routers en 2.0) | Las llaves RSA existían pero no quedó aplicado `ip ssh version 2` (1.99 = acepta v1 y v2) | `configure terminal` → `ip ssh version 2` → `write memory`. Verificado: version 2.0 |
 | 09/11 | 4–5 | `git pull` falla: *Your local changes to pkt/ClavitoVeloz.pkt would be overwritten* | Packet Tracer había vuelto a guardar el .pkt local (sin cambios reales) y el compañero subió una versión nueva | Cerrar Packet Tracer, `git restore pkt\ClavitoVeloz.pkt` y `git pull`. Regla: no dejar el .pkt modificado sin commit al terminar |
 | 07/11 | 2 | Ping de SR-BOD-PC01 a Grecia: `Reply from 172.27.86.129: Destination host unreachable` | La respuesta viene del gateway propio → la LAN de SR funciona, pero SR-RT01 no tiene ruta a Grecia. `show ip interface brief` en SR-RT01: Gi0/2 **up/down** (cable conectado, el otro extremo apagado). En GRE-RT01: Gi0/1 `administratively down` sin IP | Faltaba aplicar `GRE-RT01-fase2.txt` (IP WAN + `no shutdown` + EIGRP). Al aplicarlo se formó el vecino EIGRP y aparecieron las rutas `D` |
 | 03/11 | 1 | Los comandos de Grecia "no aparecían" en el repo | Se escribieron dentro de los `.gitkeep` (y el de SW03 en la carpeta de la sede) | Movidos a `configs/grecia/<EQUIPO>/<EQUIPO>-fase1.txt` con encabezado; regla agregada en `configs/README.md` |
@@ -464,9 +467,11 @@ Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/p
 
 ### Para la próxima sesión
 
-- [ ] **Confirmar la prueba de respaldo** (opcional +10): `tracert 172.27.86.2` desde PZ-BOD-PC01, apagar GRE-RT01 Gi0/2, repetir y ver que pasa por 172.27.87.133. Volver a encender.
-- [ ] **Nombre del archivo final:** el enunciado pide `NOMBRE-NOMBRE-NOMBRE.PKT` (3 nombres) y el grupo es de 5. Confirmar con el profesor si van los 5 nombres.
-- [ ] **Guía de estudio** para la comprobación individual (5 pts).
+- [x] **Prueba de respaldo** (opcional +10), 22/11: `tracert 172.27.86.98` desde PZ-BOD-PC01 sale por .87.138; con GRE-RT01 Gi0/2 apagada pasa por .87.133 → .87.129; al encender vuelve a .87.138. Capturas en `pruebas/wan/respaldo-*.png`.
+- [ ] **Nombre del archivo final:** el PDF pide `NOMBRE-NOMBRE-NOMBRE-NOMBRE.PKT` y dice grupos de 1 a 3, pero el grupo es de 5. Confirmar con el profesor qué nombres van.
+- [x] **Guía de estudio** para la comprobación individual: [docs/guia-estudio.md](docs/guia-estudio.md) (incluye el guion de demostración).
+- [x] **Verificación en Packet Tracer** (22/11): configuración real de los 12 equipos revisada, SSH en los 12, DHCP, pings intra e intersede, respaldo. Se corrigió `ip ssh version 2` en PZ-RT01.
+- [x] **Presentación del lienzo** (22/11): títulos uniformes (`SEDE - SAN RAMON`, `SEDE - PEREZ ZELEDON`), color distinto para PZ, notas de los 3 enlaces WAN, nota con el nombre de la empresa e integrantes, GRE-RT01 dentro de su rectángulo.
 
 ### Confirmaciones del grupo
 
@@ -475,15 +480,9 @@ Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/p
 
 ### Trabajo por hacer
 
-- [ ] **Fase 6 – Cierre:** recorrer el [checklist de entrega](docs/checklist-entrega.md) el 25/11 (incluye la revisión completa de SSH en los 12 equipos).
-- [ ] **Respaldos de configuración real:** `show running-config` de cada equipo en su carpeta de `configs/`.
-- [ ] **Capturas de pruebas — Mariangel.** Guardar `.png` en `pruebas/<sede>/` según `pruebas/README.md`. Mínimo:
-    - Grecia: ping de GRE-VEN-PC01 a Producción (.34), Desarrollo (.66), Gerencia (.98) y laptop (.117); `ipconfig` de un PC con DHCP; `show vlan brief` y `show interfaces trunk` de un switch.
-    - San Ramón: lo mismo con SR-BOD-PC01 (.162, .194, .226, .245).
-    - Pérez Zeledón: ping de PZ-BOD-PC01 a .87.34, .87.66, .87.98 y .87.117.
-    - WAN: ping entre sedes; `show ip eigrp neighbors` y `show ip route` en los 3 routers.
-    - Respaldo (opcional +10): `tracert` antes y después de apagar el enlace PZ–GRE.
-    - **Seguridad:** SSH exitoso desde cada laptop admin (se ve el banner), `telnet` rechazado, `show ip ssh`.
+- [x] **Fase 6 – Cierre:** checklist de entrega recorrido el 22/11 (secciones 1–5 completas). Solo falta el nombre del archivo final.
+- [x] **Respaldos de configuración real:** `*-running-config.txt` de GRE-RT01, SR-RT01 y GRE-SW01–03 en `configs/`; el resto coincide con los scripts.
+- [x] **Capturas de pruebas** (22/11, 19 capturas etiquetadas; índice en [pruebas/README.md](pruebas/README.md)).
 
 ---
 

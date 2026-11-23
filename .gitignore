@@ -7,3 +7,6 @@ desktop.ini
 # Respaldos automáticos de Packet Tracer
 *.pkt.bak
 *.bak
+
+# macOS
+.DS_Store

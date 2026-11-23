@@ -1,0 +1,117 @@
+! show running-config real de SR-RT01 - capturado 22/11/2026 (Fase 6)
+! Verificado: interfaces up/up, 2 vecinos EIGRP, 10 rutas D, DHCP 20+16+12+10, SSH v2
+Current configuration : 2637 bytes
+!
+version 15.1
+service password-encryption
+!
+hostname SR-RT01
+!
+enable secret 5 $1$mERr$BX2jC6dkKCB0YUjEdf1sv0
+!
+ip dhcp excluded-address 172.27.86.129
+ip dhcp excluded-address 172.27.86.161
+ip dhcp excluded-address 172.27.86.193
+ip dhcp excluded-address 172.27.86.225
+!
+ip dhcp pool SR-BODEGA
+ network 172.27.86.128 255.255.255.224
+ default-router 172.27.86.129
+ip dhcp pool SR-VENTAS
+ network 172.27.86.160 255.255.255.224
+ default-router 172.27.86.161
+ip dhcp pool SR-GERENCIA
+ network 172.27.86.192 255.255.255.224
+ default-router 172.27.86.193
+ip dhcp pool SR-CONTABILIDAD
+ network 172.27.86.224 255.255.255.240
+ default-router 172.27.86.225
+!
+ip cef
+no ipv6 cef
+!
+username kendal privilege 15 secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+username mariangel privilege 15 secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+username sebas privilege 15 secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+!
+license udi pid CISCO2911/K9 sn FTX1524E5IX-
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name clavitoveloz.com
+!
+spanning-tree mode pvst
+!
+interface GigabitEthernet0/0
+ description TRUNK-A-SR-SW01
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.100
+ description VLAN100-GERENCIA-NATIVA
+ encapsulation dot1Q 100 native
+ ip address 172.27.86.193 255.255.255.224
+!
+interface GigabitEthernet0/0.300
+ description VLAN300-VENTAS
+ encapsulation dot1Q 300
+ ip address 172.27.86.161 255.255.255.224
+!
+interface GigabitEthernet0/0.500
+ description VLAN500-BODEGA
+ encapsulation dot1Q 500
+ ip address 172.27.86.129 255.255.255.224
+!
+interface GigabitEthernet0/0.600
+ description VLAN600-CONTABILIDAD
+ encapsulation dot1Q 600
+ ip address 172.27.86.225 255.255.255.240
+!
+interface GigabitEthernet0/0.900
+ description VLAN900-ADMIN-SSH
+ encapsulation dot1Q 900
+ ip address 172.27.86.241 255.255.255.248
+!
+interface GigabitEthernet0/1
+ description WAN-A-PZ-RT01-Gi0/2
+ ip address 172.27.87.133 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/2
+ description WAN-A-GRE-RT01-Gi0/1
+ ip address 172.27.87.130 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router eigrp 10
+ network 172.27.86.0 0.0.1.255
+!
+ip classless
+!
+ip flow-export version 9
+!
+banner motd ^CACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ^C
+!
+line con 0
+ exec-timeout 5 0
+ logging synchronous
+ login local
+!
+line aux 0
+!
+line vty 0 4
+ exec-timeout 5 0
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+end

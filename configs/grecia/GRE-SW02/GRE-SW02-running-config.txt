@@ -1,0 +1,175 @@
+! show running-config real de GRE-SW02 - capturado 22/11/2026 (Fase 6)
+! Verificado: Fa0/1-20 VLAN 200, Fa0/21-24 disabled, trunks native 100
+Current configuration : 3770 bytes
+!
+version 15.0
+service password-encryption
+!
+hostname GRE-SW02
+!
+enable secret 5 $1$mERr$BX2jC6dkKCB0YUjEdf1sv0
+!
+ip ssh version 2
+no ip domain-lookup
+ip domain-name clavitoveloz.com
+!
+username kendal secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+username mariangel secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+username sebas secret 5 $1$mERr$NGWzcYUiBH/i5DS7.B7pT0
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+interface FastEthernet0/1
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/2
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/3
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/4
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/5
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/6
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/7
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/8
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/9
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/10
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/11
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/12
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/13
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/14
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/15
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/16
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/17
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/18
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/19
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/20
+ description ACCESO-PRODUCCION
+ switchport access vlan 200
+ switchport mode access
+!
+interface FastEthernet0/21
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ shutdown
+!
+interface FastEthernet0/22
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ shutdown
+!
+interface FastEthernet0/23
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ shutdown
+!
+interface FastEthernet0/24
+ description SIN-USO-PENDIENTE-SHUTDOWN-FASE5
+ shutdown
+!
+interface GigabitEthernet0/1
+ description TRUNK-A-GRE-SW01
+ switchport trunk native vlan 100
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ description TRUNK-A-GRE-SW03
+ switchport trunk native vlan 100
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan900
+ description MGMT-VLAN900
+ ip address 172.27.86.115 255.255.255.248
+!
+ip default-gateway 172.27.86.113
+!
+banner motd ^CACCESO RESTRINGIDO, SOLO PERSONAL AUTORIZADO - EL CLAVITO VELOZ^C
+!
+line con 0
+ logging synchronous
+ login local
+ exec-timeout 5 0
+!
+line vty 0 4
+ exec-timeout 5 0
+ login local
+ transport input ssh
+line vty 5 15
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+end

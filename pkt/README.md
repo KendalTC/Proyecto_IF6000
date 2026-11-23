@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | `ClavitoVeloz.pkt` | `pkt/` | Versión de trabajo actual (la que se edita) |
 | `faseN-descripcion.pkt` | `pkt/versiones/` | Respaldo al cerrar cada fase, p. ej. `fase1-grecia-vlans-dhcp.pkt` |
-| `NOMBRE-NOMBRE-NOMBRE.pkt` | `pkt/` | Archivo final de entrega (al cerrar la Fase 6) |
+| `NOMBRE-NOMBRE-NOMBRE-NOMBRE.pkt` | `pkt/` | Archivo final de entrega (al cerrar la Fase 6) |
 
 ## Reglas
 
