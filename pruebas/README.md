@@ -3,7 +3,7 @@
 Las pruebas de conectividad valen **30 pts** (+10 opcionales por la ruta de respaldo).
 Todas se tomaron sobre `pkt/ClavitoVeloz.pkt` el **22/11/2026**. Cada imagen trae una franja con el número de evidencia, qué se probó y el resultado.
 
-Cómo repetir las pruebas: [comandos-verificacion.md](comandos-verificacion.md).
+Cómo repetir las pruebas: [comandos_verificacion.md](comandos_verificacion.md).
 
 ## Índice
 

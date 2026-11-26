@@ -5,9 +5,9 @@ Curso IF6000 Redes en los Negocios II – UCR, II Ciclo 2026. Entrega presencial
 
 Este README es la **fuente de verdad del diseño**: toda decisión tomada (redes, VLANs, puertos, IPs) se registra aquí antes de configurarla en Packet Tracer.
 
-## Estado actual (09/11/2026)
+## Estado actual (26/11/2026 – día de entrega)
 
-La red está completa: 3 sedes, 15 VLANs, DHCP, triángulo WAN con EIGRP, los PCs y SSH en los 12 equipos. Falta el cierre: evidencias, archivo final y revisión con el [checklist de entrega](docs/checklist-entrega.md). **Entrega: jueves 26/11/2026.**
+La red está completa y verificada (22/11): 3 sedes, 15 VLANs, DHCP, triángulo WAN con EIGRP, 182 PCs, SSH en los 12 equipos, 19 capturas de evidencia y guía de estudio.
 
 | Fase | Estado |
 | --- | --- |
@@ -16,10 +16,16 @@ La red está completa: 3 sedes, 15 VLANs, DHCP, triángulo WAN con EIGRP, los PC
 | 2 – San Ramón + WAN GRE–SR + EIGRP | ✅ 07/11 |
 | 3 – Pérez Zeledón + triángulo WAN | ✅ 07/11 · respaldo probado 22/11 |
 | 4 – Poblar los PCs | ✅ 09/11 (Jose) |
-| 5 – Seguridad (SSH, usuarios, banner, puertos) | ✅ 08/11 (Jose) — revalidar con el [checklist de entrega](docs/checklist-entrega.md) |
-| 6 – Pruebas finales + archivo de entrega + guía de estudio | ✅ 22/11 (falta solo nombrar el archivo final) |
+| 5 – Seguridad (SSH, usuarios, banner, puertos) | ✅ 08/11 (Jose) · revalidada 22/11 |
+| 6 – Pruebas finales + guía de estudio | ✅ 22/11 (Alejandro) |
 
-**Próxima sesión:** ver [Pendientes](#pendientes).
+**Falta antes de entregar (26/11):**
+
+- [ ] **Archivo final** en `pkt/` con el formato del enunciado (`NOMBRE-NOMBRE-…​.PKT`), copia de `pkt/ClavitoVeloz.pkt`. El PDF dice 4 nombres y grupos de 1 a 3; el grupo es de 5 → confirmar con el profesor.
+- [ ] **Respaldo por integrante** (punto 5 de observaciones: *"por cada integrante, como mínimo un respaldo"*). Mariangel no tiene ningún `.pkt` en el historial y Alejandro no guardó versión de la Fase 6 → cada uno debe subir su copia a `pkt/versiones/` (p. ej. `fase6-final-alejandro.pkt`, `respaldo-final-mariangel.pkt`).
+- [ ] **Checklist sección 6 (presentación)** sin marcar: revisar el lienzo y marcarla.
+- [ ] Abrir el archivo final en la **versión de Packet Tracer del laboratorio**.
+- [ ] Commit y push final; repositorio privado.
 
 ---
 
@@ -467,7 +473,7 @@ Comandos de diagnóstico que más sirvieron: `show ip interface brief` (status/p
 
 ### Para la próxima sesión
 
-- [x] **Prueba de respaldo** (opcional +10), 22/11: `tracert 172.27.86.98` desde PZ-BOD-PC01 sale por .87.138; con GRE-RT01 Gi0/2 apagada pasa por .87.133 → .87.129; al encender vuelve a .87.138. Capturas en `pruebas/wan/respaldo-*.png`.
+- [x] **Prueba de respaldo** (opcional +10), 22/11: `tracert 172.27.86.98` desde PZ-BOD-PC01 sale por .87.138; con GRE-RT01 Gi0/2 apagada pasa por .87.133 → .87.129; al encender vuelve a .87.138. Capturas en `pruebas/wan/17-WAN-respaldo-1-ruta-normal.png`, `18-…-enlace-caido.png` y `19-…-restaurado.png`.
 - [ ] **Nombre del archivo final:** el PDF pide `NOMBRE-NOMBRE-NOMBRE-NOMBRE.PKT` y dice grupos de 1 a 3, pero el grupo es de 5. Confirmar con el profesor qué nombres van.
 - [x] **Guía de estudio** para la comprobación individual: [docs/guia-estudio.md](docs/guia-estudio.md) (incluye el guion de demostración).
 - [x] **Verificación en Packet Tracer** (22/11): configuración real de los 12 equipos revisada, SSH en los 12, DHCP, pings intra e intersede, respaldo. Se corrigió `ip ssh version 2` en PZ-RT01.

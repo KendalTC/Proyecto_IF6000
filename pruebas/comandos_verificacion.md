@@ -1,5 +1,7 @@
 # Verificación final en Packet Tracer (Fase 6)
 
+> **Nota (26/11):** este es el instructivo que se usó el 22/11. Las salidas no quedaron en `pruebas/salidas/`: la configuración real se guardó como `configs/<sede>/<EQUIPO>/<EQUIPO>-running-config.txt` y los resultados en las capturas de `pruebas/`.
+
 Archivo a abrir: `pkt/ClavitoVeloz.pkt` (es la versión más reciente: Fase 4 sobre Fase 5).
 Credenciales: usuario `kendal` · clave `redes` · enable `proyecto`.
 

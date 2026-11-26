@@ -70,7 +70,8 @@ Ejercicio típico: *"¿Cuál es el broadcast de Ventas San Ramón?"* → 172.27.
 
 ### Rutas de respaldo (opcional +10)
 - **Triángulo WAN:** cada sede tiene 2 caminos hacia cada otra sede (directo y pasando por la tercera).
-- EIGRP elige el camino de menor métrica (el directo) y guarda el otro como **feasible successor**. Si cae el enlace, cambia **automáticamente** en segundos.
+- EIGRP elige el camino de menor métrica (el directo) como **sucesor**. Si cae el enlace, recalcula y cambia **automáticamente** en segundos.
+- Ojo si preguntan por **feasible successor (FS):** en nuestro triángulo todos los enlaces son Gigabit, así que la distancia que reporta el vecino del camino alterno es **igual** a la del camino directo, y la condición de factibilidad exige que sea **menor**. Por eso normalmente **no hay FS**: al caer el enlace, EIGRP pasa a estado *activo*, consulta a sus vecinos (*query*) y encuentra el camino por la otra sede igual en segundos. Se ve con `show ip eigrp topology` en PZ-RT01 (un solo sucesor por red).
 
 ### Seguridad y SSH (puntos 4 y 7)
 - **VLAN 900 ADMIN-SSH:** "área administrativa de seguridad". Los switches tienen IP en `interface vlan 900` y `ip default-gateway`.
