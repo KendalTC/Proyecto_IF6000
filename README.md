@@ -94,7 +94,7 @@ git push                     # al terminar
 | Kendall (KendalTC) | Diseño y decisiones (D1–D3), topología física, Fases 2 y 3, repositorio |
 | Sebastián Alfaro | Fase 1 – Grecia |
 | Jose Solorzano | Fase 4 – PCs y Fase 5 – Seguridad |
-| Mariangel | _(por definir)_ |
+| Mariangel | Reorganización de documentación de pruebas (comandos_verificacion.md) y administradora SSH mariangel en los 12 equipos. |
 | Alejandro Arias | Fase 6 – Verificación final de los 12 equipos, corrección de SSH en PZ-RT01, prueba de respaldo, evidencias etiquetadas, presentación del lienzo, guía de estudio |
 
 Usuarios SSH: el enunciado exige **exactamente 3 administradores** en todos los equipos, por eso hay 3 usuarios (`kendal`, `mariangel`, `sebas`) aunque el grupo sea de 5.
